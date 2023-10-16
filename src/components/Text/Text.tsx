@@ -62,12 +62,14 @@ interface Props {
     typography?: string
     style?: any
     center?: any
+    fontWeight?: any
 }
 const CustomText = ({
     children,
     fontSize = 'body1',
     color = 'white',
     typography = 'default',
+    fontWeight = 'normal',
     style = null,
     center = false
 }: Props) => {
@@ -82,6 +84,9 @@ const CustomText = ({
             // {...otherProps}
             style={[
                 {
+                    fontWeight: isNaN(fontWeight)
+                        ? fontWeight
+                        : parseInt(fontWeight), // Parse numeric values
                     fontSize: scaledFontSize,
                     color: colors[color],
                     fontFamily: typographies[typography],

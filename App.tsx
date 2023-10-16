@@ -1,31 +1,10 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
 import React from 'react'
-import type { PropsWithChildren } from 'react'
-import {
-    SafeAreaView,
-    ScrollView,
-    StatusBar,
-    StyleSheet,
-    Text,
-    useColorScheme,
-    View
-} from 'react-native'
+import { SafeAreaView, StyleSheet } from 'react-native'
 import { CustomText } from './src/components'
+import Login from './src/screens/Login'
 
 const App = () => {
-    return (
-        <SafeAreaView>
-            <CustomText color="black" fontSize="h2">
-                App
-            </CustomText>
-        </SafeAreaView>
-    )
+    return <Login />
 }
 const styles = StyleSheet.create({
     sectionContainer: {
