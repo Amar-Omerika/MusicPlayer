@@ -30,7 +30,8 @@ const fontSizes: FontSizes = {
     body4: 11,
     body5: 30,
     body6: 18,
-    smallCaps: 8
+    smallCaps: 8,
+    largeCaps: 66
 }
 // Define an index signature for the colors object
 type Colors = {
@@ -40,10 +41,15 @@ type Colors = {
 const colors: Colors = {
     white: '#FFF',
     black: '#000',
-    blackLight: '#474646',
-    blackMedium: '#231F20',
-    grey: '#C4C4C4',
-    greyDark: '#949292'
+    lightGrey: '#e3e3e3',
+    darkgrey: '#575855',
+    mediumGrey: '#798082',
+    darkBlue: '#191f27',
+    yellow: '#efb80d',
+    mediumBlue: '#36525b',
+    darkGreen: '#344c4b',
+    lightGreen: '#3b6c74',
+    blue: '#3c647c'
 }
 // Define an index signature for the colors object
 type Typographies = {
