@@ -7,10 +7,16 @@ import {
     TouchableOpacity,
     View
 } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 import { CustomText, Divider, Wrapper } from '../../components'
 import { ThemeColors } from '../../constants/ThemeColors'
 import { PersonImage } from '../../assets'
+
 const Login = () => {
+    const navigation: any = useNavigation()
+    const handleLogin = () => {
+        navigation.navigate('App')
+    }
     return (
         <SafeAreaView style={styles.safeAreaContainer}>
             <ScrollView>
@@ -65,7 +71,10 @@ const Login = () => {
                             source={PersonImage}
                             style={styles.imageStyling}
                         />
-                        <TouchableOpacity style={styles.btnStyling}>
+                        <TouchableOpacity
+                            onPress={handleLogin}
+                            style={styles.btnStyling}
+                        >
                             <CustomText color="black" fontWeight="bold">
                                 Listen Now
                             </CustomText>
@@ -94,7 +103,7 @@ const styles = StyleSheet.create({
     },
     btnStyling: {
         backgroundColor: ThemeColors.yellow,
-        marginTop: 20,
+        marginTop: 15,
         width: '100%',
         alignItems: 'center',
         padding: 15,

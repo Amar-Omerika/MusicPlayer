@@ -1,10 +1,13 @@
 import React from 'react'
-import { SafeAreaView, StyleSheet } from 'react-native'
-import { CustomText } from './src/components'
-import Login from './src/screens/Login'
+import 'react-native-gesture-handler'
+import { NavigationContainer } from '@react-navigation/native'
+import Navigator from './src/navigation'
 
 const App = () => {
-    return <Login />
+    return (
+        <NavigationContainer>
+            <Navigator />
+        </NavigationContainer>
+    )
 }
-const styles = StyleSheet.create({})
 export default App
