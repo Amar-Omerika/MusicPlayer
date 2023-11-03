@@ -1,13 +1,20 @@
 import React from 'react'
 
-import { SafeAreaView, Text } from 'react-native'
+import { SafeAreaView, StyleSheet, Text } from 'react-native'
+import { ThemeColors } from '../../constants/ThemeColors'
 
 const Home = () => {
     return (
-        <SafeAreaView>
+        <SafeAreaView style={styles.safeAreaContainer}>
             <Text>Home</Text>
         </SafeAreaView>
     )
 }
 
 export default Home
+const styles = StyleSheet.create({
+    safeAreaContainer: {
+        flex: 1,
+        backgroundColor: ThemeColors.lightBlack
+    }
+})

@@ -8,6 +8,6 @@ export const ThemeColors = {
    mediumBlue:'#36525b',
    darkGreen:'#344c4b',
    lightGreen:'#3b6c74',
-   blue:'#3c647c'
- 
+   blue:'#3c647c',
+   lightBlack:'#1b242e'
   };

@@ -142,7 +142,7 @@ export default Login
 const styles = StyleSheet.create({
     safeAreaContainer: {
         flex: 1,
-        backgroundColor: ThemeColors.darkBlue
+        backgroundColor: ThemeColors.lightBlack
     },
     imageContainer: {
         alignItems: 'center'
