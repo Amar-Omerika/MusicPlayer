@@ -76,6 +76,7 @@ android {
     namespace "com.musicplayer"
     defaultConfig {
         applicationId "com.musicplayer"
+        manifestPlaceholders = [appAuthRedirectScheme: 'com.musicplayer.com']
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

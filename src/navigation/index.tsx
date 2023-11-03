@@ -5,6 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Login from '../screens/Login'
 import Home from '../screens/Home'
 import { useNavigation } from '@react-navigation/native'
+import { useEffect } from 'react'
 
 const defaultStackOptions = {
     headerShown: false
@@ -41,7 +42,6 @@ const RootStackScreen = () => {
 
     return (
         <RootStack.Navigator
-            // initialRouteName={userToken ? 'App' : 'Auth'}
             screenOptions={{
                 ...defaultStackOptions
             }}
