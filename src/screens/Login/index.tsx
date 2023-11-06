@@ -24,8 +24,8 @@ const Login = () => {
         const checkTokenValidity = async () => {
             const accessToken = await AsyncStorage.getItem('token')
             const expirationDate = await AsyncStorage.getItem('expirationDate')
-            console.log('acess token', accessToken)
-            console.log('expiration date', expirationDate)
+            // console.log('acess token', accessToken)
+            // console.log('expiration date', expirationDate)
 
             if (accessToken && expirationDate) {
                 const currentTime = Date.now()
