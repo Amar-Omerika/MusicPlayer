@@ -8,8 +8,14 @@ import Login from '../screens/Login'
 import Home from '../screens/Home'
 
 //images
-import { HomeActiveIcon, HomeInactiveIcon } from '../assets'
-import { Image } from 'react-native'
+import {
+    HomeActiveIcon,
+    HomeInactiveIcon,
+    SearchActiveIcon,
+    SearchInActiveIcon,
+    LibraryActiveIcon,
+    LibraryInActiveIcon
+} from '../assets'
 
 const defaultStackOptions = {
     headerShown: false
@@ -32,7 +38,19 @@ const TabBarConfig = [
         screen: Home,
         activeIcon: HomeActiveIcon,
         inactiveIcon: HomeInactiveIcon,
-        tabBarLabel: 'home'
+        tabBarLabel: 'Home'
+    },
+    {
+        screen: Home,
+        activeIcon: SearchActiveIcon,
+        inactiveIcon: SearchInActiveIcon,
+        tabBarLabel: 'Search'
+    },
+    {
+        screen: Home,
+        activeIcon: LibraryActiveIcon,
+        inactiveIcon: LibraryInActiveIcon,
+        tabBarLabel: 'Your Library'
     }
 ]
 
@@ -42,27 +60,33 @@ const TabNavigatorScreen = () => (
         initialRouteName={'Home'}
         screenOptions={({ route }) => ({
             ...defaultStackOptions,
-            tabBarIcon: ({ focused }) => {
+            tabBarIcon: ({ focused, size }) => {
                 const tab = TabBarConfig.find(
                     ({ tabBarLabel }) => tabBarLabel === route.name
                 )
-                if (tab) {
-                    return (
-                        <Image
-                            source={focused ? tab.activeIcon : tab.inactiveIcon}
-                            style={{ width: 24, height: 24 }} // Set the width and height as per your design
-                        />
-                    )
-                }
+                return (
+                    tab &&
+                    (focused ? (
+                        <tab.activeIcon size={size} />
+                    ) : (
+                        <tab.inactiveIcon size={size} />
+                    ))
+                )
             },
             tabBarStyle: {
                 borderTopWidth: 0,
                 elevation: 35,
                 shadowColor: '#000',
+                height: 70,
                 backgroundColor: ThemeColors.darkBlue
             },
-            tabBarActiveTintColor: 'red',
-            tabBarInactiveTintColor: 'black'
+            tabBarLabelStyle: {
+                fontSize: 10,
+                marginTop: -10,
+                paddingBottom: 10
+            },
+            tabBarActiveTintColor: 'white',
+            tabBarInactiveTintColor: ThemeColors.lightGrey
         })}
     >
         {TabBarConfig.map(({ screen, tabBarLabel }) => (
