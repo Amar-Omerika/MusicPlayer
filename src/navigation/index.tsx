@@ -1,7 +1,7 @@
 import { createStackNavigator } from '@react-navigation/stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { useNavigation } from '@react-navigation/native'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { ThemeColors } from '../constants/ThemeColors'
 //screens
 import Login from '../screens/Login'
@@ -16,6 +16,7 @@ import {
     LibraryActiveIcon,
     LibraryInActiveIcon
 } from '../assets'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const defaultStackOptions = {
     headerShown: false
@@ -102,22 +103,48 @@ const TabNavigatorScreen = () => (
 
 const RootStack = createStackNavigator()
 const RootStackScreen = () => {
-    //   const userToken = useSelector((state) => state.login.userToken);
+    const [token, setToken] = useState<any>()
+    const [isNavigatorReady, setNavigatorReady] = useState(false)
+    const navigation: any = useNavigation()
 
-    // const navigation = useNavigation()
+    useEffect(() => {
+        const checkTokenValidity = async () => {
+            const accessToken = await AsyncStorage.getItem('token')
+            const expirationDate = await AsyncStorage.getItem('expirationDate')
+            setToken(accessToken)
+            setNavigatorReady(true)
+            // console.log('acess token', accessToken)
+            // console.log('expiration date', expirationDate)
 
-    // if (!userToken) {
-    //     navigation.navigate('Auth')
-    // }
+            if (accessToken && expirationDate) {
+                const currentTime = Date.now()
+                if (currentTime < parseInt(expirationDate)) {
+                    // here the token is still valid
+                    setNavigatorReady(true)
+                } else {
+                    // token would be expired so we need to remove it from the async storage
+                    AsyncStorage.removeItem('token')
+                    AsyncStorage.removeItem('expirationDate')
+                    setNavigatorReady(true)
+                }
+            }
+        }
+
+        checkTokenValidity()
+    }, [token])
+
+    if (!isNavigatorReady) {
+        // Return a loading indicator or any other appropriate component
+        return null
+    }
+    if (!token) {
+        navigation.navigate('Auth')
+    }
 
     return (
-        <RootStack.Navigator
-            screenOptions={{
-                ...defaultStackOptions
-            }}
-        >
-            <RootStack.Screen name="Auth" component={AuthStackScreen} />
+        <RootStack.Navigator screenOptions={{ ...defaultStackOptions }}>
             <RootStack.Screen name="App" component={TabNavigatorScreen} />
+            <RootStack.Screen name="Auth" component={AuthStackScreen} />
         </RootStack.Navigator>
     )
 }

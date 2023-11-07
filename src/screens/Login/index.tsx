@@ -20,29 +20,6 @@ const Login = () => {
         authenticate()
     }
 
-    useEffect(() => {
-        const checkTokenValidity = async () => {
-            const accessToken = await AsyncStorage.getItem('token')
-            const expirationDate = await AsyncStorage.getItem('expirationDate')
-            // console.log('acess token', accessToken)
-            // console.log('expiration date', expirationDate)
-
-            if (accessToken && expirationDate) {
-                const currentTime = Date.now()
-                if (currentTime < parseInt(expirationDate)) {
-                    // here the token is still valid
-                    navigation.replace('App')
-                } else {
-                    // token would be expired so we need to remove it from the async storage
-                    AsyncStorage.removeItem('token')
-                    AsyncStorage.removeItem('expirationDate')
-                }
-            }
-        }
-
-        checkTokenValidity()
-    }, [])
-
     async function authenticate() {
         const config = {
             issuer: 'https://accounts.spotify.com',
