@@ -71,8 +71,8 @@ const Login = () => {
     }
     return (
         <SafeAreaView style={styles.safeAreaContainer}>
-            <ScrollView>
-                <Wrapper>
+            <Wrapper>
+                <View style={{ flex: 1 }}>
                     <CustomText
                         color="yellow"
                         fontSize="largeCaps"
@@ -118,22 +118,19 @@ const Login = () => {
                     >
                         now it's easier
                     </CustomText>
-                    <View style={styles.imageContainer}>
-                        <Image
-                            source={PersonImage}
-                            style={styles.imageStyling}
-                        />
-                        <TouchableOpacity
-                            onPress={handleLogin}
-                            style={styles.btnStyling}
-                        >
-                            <CustomText color="black" fontWeight="bold">
-                                Listen Now
-                            </CustomText>
-                        </TouchableOpacity>
-                    </View>
-                </Wrapper>
-            </ScrollView>
+                </View>
+                <View style={styles.imageContainer}>
+                    <Image source={PersonImage} style={styles.imageStyling} />
+                    <TouchableOpacity
+                        onPress={handleLogin}
+                        style={styles.btnStyling}
+                    >
+                        <CustomText color="black" fontWeight="bold">
+                            Listen Now
+                        </CustomText>
+                    </TouchableOpacity>
+                </View>
+            </Wrapper>
         </SafeAreaView>
     )
 }
@@ -145,12 +142,13 @@ const styles = StyleSheet.create({
         backgroundColor: ThemeColors.lightBlack
     },
     imageContainer: {
-        alignItems: 'center'
+        alignItems: 'center',
+        flex: 1,
+        flexDirection: 'column'
     },
     imageStyling: {
-        width: 320,
-        height: 340,
         resizeMode: 'contain',
+        flex: 1,
         opacity: 0.5
     },
     btnStyling: {

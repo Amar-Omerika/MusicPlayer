@@ -7,7 +7,7 @@ interface Props {
     backgroundColor?: string
 }
 const Wrapper = ({ padding = 10, children }: Props) => {
-    return <View style={{ padding }}>{children}</View>
+    return <View style={{ padding, flex: 1 }}>{children}</View>
 }
 
 export default Wrapper
