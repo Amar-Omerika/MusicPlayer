@@ -5,7 +5,7 @@ import LibraryActiveIcon from './svg/libraryActiveIcon.svg'
 import LibraryInActiveIcon from './svg/libraryInactiveIcon.svg'
 import SearchActiveIcon from './svg/searchActiveIcon.svg'
 import SearchInActiveIcon from './svg/searchInactiveIcon.svg'
-
+import HomePlayIcon from './svg/homePlayIcon.svg'
 
 
 
@@ -16,6 +16,7 @@ export {
     LibraryActiveIcon,
     LibraryInActiveIcon,
     SearchActiveIcon,
-    SearchInActiveIcon
+    SearchInActiveIcon,
+    HomePlayIcon
 };
 

@@ -1,20 +1,18 @@
 import React, { useEffect, useState } from 'react'
-
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import {
     SafeAreaView,
     StyleSheet,
-    Text,
     View,
     Image,
     FlatList,
     ImageBackground
 } from 'react-native'
-import { ThemeColors } from '../../constants/ThemeColors'
-
-import apiHelper from '../../utils/apiHelper'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { CustomText, Wrapper } from '../../components'
 import { BlurView } from '@react-native-community/blur'
+import { ThemeColors } from '../../constants/ThemeColors'
+import apiHelper from '../../utils/apiHelper'
+import { CustomText, Wrapper } from '../../components'
+import { HomePlayIcon } from '../../assets'
 
 const Home = () => {
     const [user, setUser] = useState<any>({})
@@ -75,7 +73,9 @@ const Home = () => {
             title: 'Third Item'
         }
     ]
-    type ItemProps = { title: any }
+    interface ItemProps {
+        title: any
+    }
 
     const Item = ({ title }: ItemProps) => (
         <View style={styles.container}>
@@ -96,7 +96,7 @@ const Home = () => {
                         <CustomText
                             fontSize="h5"
                             fontWeight="bold"
-                            style={{ paddingTop: 10, paddingLeft: 10 }}
+                            style={styles.titleMostPopularPadding}
                         >
                             {title}
                         </CustomText>
@@ -104,12 +104,15 @@ const Home = () => {
                             numberOfLines={1}
                             color="lightGrey"
                             fontWeight="400"
-                            style={{
-                                paddingLeft: 10
-                            }}
+                            style={styles.subtitleMostPopularPadding}
                         >
                             Tulues,FLoat,For Revenge
                         </CustomText>
+                    </View>
+                    <View style={styles.rightItemCardBluredViewContent}>
+                        <View style={styles.playIconView}>
+                            <HomePlayIcon />
+                        </View>
                     </View>
                 </View>
             </ImageBackground>
@@ -185,13 +188,13 @@ const styles = StyleSheet.create({
     headertext: {
         alignSelf: 'center'
     },
-    //flatlist item styling
+    //most popular flatlist item styling
     container: {
         height: 200,
         width: 280,
         marginRight: 10,
         marginTop: 10,
-        borderRadius: 15,
+        borderRadius: 20,
         overflow: 'hidden' // Clip the image and blur within the container
     },
     backgroundImage: {
@@ -224,5 +227,16 @@ const styles = StyleSheet.create({
     },
     rightItemCardBluredViewContent: {
         width: '30%'
-    }
+    },
+    playIconView: {
+        marginTop: '19%',
+        marginLeft: '31%',
+        backgroundColor: ThemeColors.yellow,
+        borderRadius: 100
+    },
+    titleMostPopularPadding: {
+        paddingTop: 10,
+        paddingLeft: 10
+    },
+    subtitleMostPopularPadding: { paddingLeft: 10 }
 })
