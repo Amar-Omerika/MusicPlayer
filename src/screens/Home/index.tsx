@@ -17,6 +17,7 @@ import { HomePlayIcon } from '../../assets'
 const Home = () => {
     const [user, setUser] = useState<any>({})
     const [greetingMessage, setGreetingMessage] = useState<string>('')
+    const [mostPopularPlaylist, setMostPopularPlaylist] = useState<any>()
 
     useEffect(() => {
         // Get the current time
@@ -41,7 +42,7 @@ const Home = () => {
             setGreetingMessage(greetingMessages.night)
         }
     }, [])
-    const fetchData = async () => {
+    const fetchUserData = async () => {
         const token: string = (await AsyncStorage.getItem('token')) as string //type assertion
         try {
             const result = await apiHelper<string>(
@@ -56,8 +57,24 @@ const Home = () => {
             console.error('Request Error:', error)
         }
     }
+    const fetchMostPopularPlaylist = async () => {
+        const token: string = (await AsyncStorage.getItem('token')) as string //type assertion
+        try {
+            const result = await apiHelper<string>(
+                'get',
+                '/browse/featured-playlists',
+                undefined,
+                undefined,
+                token
+            ) // GET request with Bearer token
+            setMostPopularPlaylist(result.data)
+        } catch (error) {
+            console.error('Request Error:', error)
+        }
+    }
     useEffect(() => {
-        fetchData()
+        fetchUserData()
+        fetchMostPopularPlaylist()
     }, [])
     const DATA = [
         {
@@ -75,14 +92,14 @@ const Home = () => {
     ]
     interface ItemProps {
         title: any
+        coverImage?: any
+        description: string
     }
 
-    const Item = ({ title }: ItemProps) => (
+    const Item = ({ title, description, coverImage }: ItemProps) => (
         <View style={styles.container}>
             <ImageBackground
-                source={{
-                    uri: 'https://t3.ftcdn.net/jpg/01/79/46/68/360_F_179466839_nARiMdo6ocQWnw6X5YyecerwSYnAVb88.jpg'
-                }}
+                source={{ uri: coverImage }}
                 style={styles.backgroundImage}
             >
                 <BlurView
@@ -106,7 +123,7 @@ const Home = () => {
                             fontWeight="400"
                             style={styles.subtitleMostPopularPadding}
                         >
-                            Tulues,FLoat,For Revenge
+                            {description}
                         </CustomText>
                     </View>
                     <View style={styles.rightItemCardBluredViewContent}>
@@ -140,7 +157,7 @@ const Home = () => {
                                 fontSize="h6"
                                 fontWeight="400"
                             >
-                                Amar
+                                {user && user.display_name}
                             </CustomText>
                         </View>
                     </View>
@@ -150,13 +167,19 @@ const Home = () => {
                     fontWeight="400"
                     style={{ marginTop: 10 }}
                 >
-                    Most popular
+                    {mostPopularPlaylist && mostPopularPlaylist?.message}
                 </CustomText>
                 <FlatList
-                    data={DATA}
+                    data={mostPopularPlaylist?.playlists.items}
                     horizontal
                     showsHorizontalScrollIndicator={false} // optional, hide horizontal scrollbar
-                    renderItem={({ item }) => <Item title={item.title} />}
+                    renderItem={({ item }) => (
+                        <Item
+                            title={item?.name}
+                            description={item?.description}
+                            coverImage={item?.images[0].url}
+                        />
+                    )}
                     keyExtractor={item => item.id}
                 />
             </Wrapper>
