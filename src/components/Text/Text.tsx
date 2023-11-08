@@ -1,16 +1,6 @@
 import React from 'react'
 import { Text, useWindowDimensions } from 'react-native'
 
-/**
- * @descriptionDisplays
- * fontSize (optional, default: 'body1'): The size of the font. Choose from predefined sizes like 'h1', 'h2', 'body1', etc.
- * color (optional, default: 'white'): The color of the text. Choose from predefined colors like 'black', 'grey', 'blackMedium', etc.
- * typography (optional, default: 'default'): The font family of the text. Choose from predefined typography options like 'bold', 'italic', etc.
- * style (optional): Additional custom styles to apply to the text element.
- * center (optional, default: false): Determine whether the text should be aligned in the center or left.
- * @author Amar Omerika
- */
-
 // Define an index signature for the fontSizes object
 type FontSizes = {
     [key: string]: number
@@ -69,6 +59,8 @@ interface Props {
     style?: any
     center?: any
     fontWeight?: any
+    ellipsizeMode?: 'head' | 'middle' | 'tail' | 'clip'
+    numberOfLines?: number
 }
 const CustomText = ({
     children,
@@ -77,7 +69,9 @@ const CustomText = ({
     typography = 'default',
     fontWeight = 'normal',
     style = null,
-    center = false
+    center = false,
+    ellipsizeMode, // Receive ellipsizeMode as a prop
+    numberOfLines // Receive numberOfLines as a prop
 }: Props) => {
     // Calculate font scale based on phone settings
     const { fontScale } = useWindowDimensions()
@@ -88,6 +82,8 @@ const CustomText = ({
     return (
         <Text
             // {...otherProps}
+            ellipsizeMode={ellipsizeMode}
+            numberOfLines={numberOfLines}
             style={[
                 {
                     fontWeight: isNaN(fontWeight)

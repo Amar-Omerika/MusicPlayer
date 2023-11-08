@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios, { AxiosResponse, AxiosError } from 'axios';
 
 const baseURL = 'https://api.spotify.com/v1';

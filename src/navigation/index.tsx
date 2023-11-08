@@ -111,7 +111,6 @@ const RootStackScreen = () => {
         const checkTokenValidity = async () => {
             const accessToken = await AsyncStorage.getItem('token')
             const expirationDate = await AsyncStorage.getItem('expirationDate')
-            setToken(accessToken)
             setNavigatorReady(true)
             // console.log('acess token', accessToken)
             // console.log('expiration date', expirationDate)
@@ -120,11 +119,13 @@ const RootStackScreen = () => {
                 const currentTime = Date.now()
                 if (currentTime < parseInt(expirationDate)) {
                     // here the token is still valid
+                    setToken(accessToken)
                     setNavigatorReady(true)
                 } else {
                     // token would be expired so we need to remove it from the async storage
                     AsyncStorage.removeItem('token')
                     AsyncStorage.removeItem('expirationDate')
+                    setToken(false)
                     setNavigatorReady(true)
                 }
             }

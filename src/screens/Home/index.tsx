@@ -1,11 +1,20 @@
 import React, { useEffect, useState } from 'react'
 
-import { SafeAreaView, StyleSheet, Text, View, Image } from 'react-native'
+import {
+    SafeAreaView,
+    StyleSheet,
+    Text,
+    View,
+    Image,
+    FlatList,
+    ImageBackground
+} from 'react-native'
 import { ThemeColors } from '../../constants/ThemeColors'
 
 import apiHelper from '../../utils/apiHelper'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { CustomText, Wrapper } from '../../components'
+import { BlurView } from '@react-native-community/blur'
 
 const Home = () => {
     const [user, setUser] = useState<any>({})
@@ -34,7 +43,6 @@ const Home = () => {
             setGreetingMessage(greetingMessages.night)
         }
     }, [])
-
     const fetchData = async () => {
         const token: string = (await AsyncStorage.getItem('token')) as string //type assertion
         try {
@@ -53,6 +61,61 @@ const Home = () => {
     useEffect(() => {
         fetchData()
     }, [])
+    const DATA = [
+        {
+            id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
+            title: 'First Item'
+        },
+        {
+            id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
+            title: 'Second Item'
+        },
+        {
+            id: '58694a0f-3da1-471f-bd96-145571e29d72',
+            title: 'Third Item'
+        }
+    ]
+    type ItemProps = { title: any }
+
+    const Item = ({ title }: ItemProps) => (
+        <View style={styles.container}>
+            <ImageBackground
+                source={{
+                    uri: 'https://t3.ftcdn.net/jpg/01/79/46/68/360_F_179466839_nARiMdo6ocQWnw6X5YyecerwSYnAVb88.jpg'
+                }}
+                style={styles.backgroundImage}
+            >
+                <BlurView
+                    style={styles.absolute}
+                    blurType="light"
+                    blurAmount={20}
+                    reducedTransparencyFallbackColor="white"
+                />
+                <View style={styles.itemCardBluredViewContent}>
+                    <View style={styles.leftItemCardBluredViewContent}>
+                        <CustomText
+                            fontSize="h5"
+                            fontWeight="bold"
+                            style={{ paddingTop: 10, paddingLeft: 10 }}
+                        >
+                            {title}
+                        </CustomText>
+                        <CustomText
+                            numberOfLines={1}
+                            color="lightGrey"
+                            fontWeight="400"
+                            style={{
+                                paddingLeft: 10
+                            }}
+                        >
+                            Tulues,FLoat,For Revenge
+                        </CustomText>
+                    </View>
+                </View>
+            </ImageBackground>
+        </View>
+    )
+
     return (
         <SafeAreaView style={styles.safeAreaContainer}>
             <Wrapper>
@@ -79,6 +142,20 @@ const Home = () => {
                         </View>
                     </View>
                 </View>
+                <CustomText
+                    fontSize="h4"
+                    fontWeight="400"
+                    style={{ marginTop: 10 }}
+                >
+                    Most popular
+                </CustomText>
+                <FlatList
+                    data={DATA}
+                    horizontal
+                    showsHorizontalScrollIndicator={false} // optional, hide horizontal scrollbar
+                    renderItem={({ item }) => <Item title={item.title} />}
+                    keyExtractor={item => item.id}
+                />
             </Wrapper>
         </SafeAreaView>
     )
@@ -107,5 +184,45 @@ const styles = StyleSheet.create({
     },
     headertext: {
         alignSelf: 'center'
+    },
+    //flatlist item styling
+    container: {
+        height: 200,
+        width: 280,
+        marginRight: 10,
+        marginTop: 10,
+        borderRadius: 15,
+        overflow: 'hidden' // Clip the image and blur within the container
+    },
+    backgroundImage: {
+        flex: 1,
+        width: '100%',
+        height: '100%'
+    },
+    absolute: {
+        position: 'absolute',
+        left: 0,
+        bottom: 0,
+        right: 0,
+        height: 70
+    },
+    titleText: {
+        color: 'white',
+        fontSize: 16,
+        fontWeight: 'bold'
+    },
+    itemCardBluredViewContent: {
+        flexDirection: 'row',
+        width: '100%',
+        height: 70,
+        position: 'absolute',
+        bottom: 0
+    },
+    leftItemCardBluredViewContent: {
+        width: '70%',
+        flexDirection: 'column'
+    },
+    rightItemCardBluredViewContent: {
+        width: '30%'
     }
 })
