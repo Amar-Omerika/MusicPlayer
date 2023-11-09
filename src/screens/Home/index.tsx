@@ -13,12 +13,20 @@ import { ThemeColors } from '../../constants/ThemeColors'
 import apiHelper from '../../utils/apiHelper'
 import { CustomText, Wrapper } from '../../components'
 import { HomePlayIcon } from '../../assets'
+import { useApi } from '../../context/ApiContext'
 
 const Home = () => {
-    const [user, setUser] = useState<any>({})
+    const {
+        user,
+        setUser,
+        mostPopularPlaylist,
+        setMostPopularPlaylist,
+        newReleasePlaylist,
+        setNewReleasePlaylist
+    } = useApi()
     const [greetingMessage, setGreetingMessage] = useState<string>('')
-    const [mostPopularPlaylist, setMostPopularPlaylist] = useState<any>()
 
+    //useEffect for greeting message
     useEffect(() => {
         // Get the current time
         const currentHour = new Date().getHours()
@@ -41,6 +49,12 @@ const Home = () => {
         } else {
             setGreetingMessage(greetingMessages.night)
         }
+    }, [])
+    //useEffect for fetching playlists
+    useEffect(() => {
+        fetchUserData()
+        fetchMostPopularPlaylist()
+        fetchNewReleasePlaylist()
     }, [])
     const fetchUserData = async () => {
         const token: string = (await AsyncStorage.getItem('token')) as string //type assertion
@@ -72,24 +86,23 @@ const Home = () => {
             console.error('Request Error:', error)
         }
     }
-    useEffect(() => {
-        fetchUserData()
-        fetchMostPopularPlaylist()
-    }, [])
-    const DATA = [
-        {
-            id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-            title: 'First Item'
-        },
-        {
-            id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-            title: 'Second Item'
-        },
-        {
-            id: '58694a0f-3da1-471f-bd96-145571e29d72',
-            title: 'Third Item'
+
+    const fetchNewReleasePlaylist = async () => {
+        const token: string = (await AsyncStorage.getItem('token')) as string //type assertion
+        try {
+            const result = await apiHelper<string>(
+                'get',
+                '/browse/new-releases',
+                undefined,
+                undefined,
+                token
+            ) // GET request with Bearer token
+            setNewReleasePlaylist(result.data)
+        } catch (error) {
+            console.error('Request Error:', error)
         }
-    ]
+    }
+
     interface ItemProps {
         title: any
         coverImage?: any
@@ -135,7 +148,36 @@ const Home = () => {
             </ImageBackground>
         </View>
     )
-
+    interface ItemNewReleaseProps {
+        title: any
+        coverImage?: any
+    }
+    const ItemNewRelease = ({ title, coverImage }: ItemNewReleaseProps) => (
+        <View style={styles.container1}>
+            <ImageBackground
+                source={{ uri: coverImage }}
+                style={styles.backgroundImage}
+            >
+                <BlurView
+                    style={styles.absolute}
+                    blurType="light"
+                    blurAmount={20}
+                    reducedTransparencyFallbackColor="white"
+                />
+                <View style={styles.itemCardBluredViewContent}>
+                    <View style={styles.leftItemCardBluredViewContent}>
+                        <CustomText
+                            fontSize="h5"
+                            fontWeight="bold"
+                            style={styles.titleMostPopularPadding}
+                        >
+                            {title}
+                        </CustomText>
+                    </View>
+                </View>
+            </ImageBackground>
+        </View>
+    )
     return (
         <SafeAreaView style={styles.safeAreaContainer}>
             <Wrapper>
@@ -169,19 +211,42 @@ const Home = () => {
                 >
                     {mostPopularPlaylist && mostPopularPlaylist?.message}
                 </CustomText>
-                <FlatList
-                    data={mostPopularPlaylist?.playlists.items}
-                    horizontal
-                    showsHorizontalScrollIndicator={false} // optional, hide horizontal scrollbar
-                    renderItem={({ item }) => (
-                        <Item
-                            title={item?.name}
-                            description={item?.description}
-                            coverImage={item?.images[0].url}
-                        />
-                    )}
-                    keyExtractor={item => item.id}
-                />
+                <View>
+                    <FlatList
+                        data={mostPopularPlaylist?.playlists.items}
+                        horizontal
+                        showsHorizontalScrollIndicator={false} // optional, hide horizontal scrollbar
+                        renderItem={({ item }) => (
+                            <Item
+                                title={item?.name}
+                                description={item?.description}
+                                coverImage={item?.images[0].url}
+                            />
+                        )}
+                        keyExtractor={item => item.id}
+                    />
+                </View>
+                <CustomText
+                    fontSize="h4"
+                    fontWeight="400"
+                    style={{ marginTop: 20 }}
+                >
+                    New Release
+                </CustomText>
+                <View>
+                    <FlatList
+                        data={newReleasePlaylist?.albums.items}
+                        horizontal
+                        showsHorizontalScrollIndicator={false} // optional, hide horizontal scrollbar
+                        renderItem={({ item }) => (
+                            <ItemNewRelease
+                                title={item?.name}
+                                coverImage={item?.images[0].url}
+                            />
+                        )}
+                        keyExtractor={item => item.id}
+                    />
+                </View>
             </Wrapper>
         </SafeAreaView>
     )
@@ -261,5 +326,14 @@ const styles = StyleSheet.create({
         paddingTop: 10,
         paddingLeft: 10
     },
-    subtitleMostPopularPadding: { paddingLeft: 10 }
+    subtitleMostPopularPadding: { paddingLeft: 10 },
+    //new Release flatlist item styling
+    container1: {
+        height: 200,
+        width: 180,
+        marginRight: 10,
+        marginTop: 10,
+        borderRadius: 20,
+        overflow: 'hidden' // Clip the image and blur within the container
+    }
 })

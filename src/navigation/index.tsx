@@ -106,11 +106,12 @@ const RootStack = createStackNavigator()
 const RootStackScreen = () => {
     const { token } = useAuth()
     const navigation: any = useNavigation()
-    console.log('token', token)
 
     useEffect(() => {
         if (!token) {
             navigation.navigate('Auth')
+        } else {
+            navigation.navigate('App')
         }
     }, [token])
 

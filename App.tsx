@@ -6,7 +6,7 @@ import { useAuth } from './src/context/AuthContext'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const App = () => {
-    const { token, setToken } = useAuth()
+    const { setToken } = useAuth()
     useEffect(() => {
         const checkTokenValidity = async () => {
             const accessToken = await AsyncStorage.getItem('token')
