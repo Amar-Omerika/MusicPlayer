@@ -17,6 +17,7 @@ import {
     LibraryInActiveIcon
 } from '../assets'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useAuth } from '../context/AuthContext'
 
 const defaultStackOptions = {
     headerShown: false
@@ -103,44 +104,15 @@ const TabNavigatorScreen = () => (
 
 const RootStack = createStackNavigator()
 const RootStackScreen = () => {
-    const [token, setToken] = useState<any>()
-    const [isNavigatorReady, setNavigatorReady] = useState(false)
+    const { token } = useAuth()
     const navigation: any = useNavigation()
+    console.log('token', token)
 
     useEffect(() => {
-        const checkTokenValidity = async () => {
-            const accessToken = await AsyncStorage.getItem('token')
-            const expirationDate = await AsyncStorage.getItem('expirationDate')
-            setNavigatorReady(true)
-            // console.log('acess token', accessToken)
-            // console.log('expiration date', expirationDate)
-
-            if (accessToken && expirationDate) {
-                const currentTime = Date.now()
-                if (currentTime < parseInt(expirationDate)) {
-                    // here the token is still valid
-                    setToken(accessToken)
-                    setNavigatorReady(true)
-                } else {
-                    // token would be expired so we need to remove it from the async storage
-                    AsyncStorage.removeItem('token')
-                    AsyncStorage.removeItem('expirationDate')
-                    setToken(false)
-                    setNavigatorReady(true)
-                }
-            }
+        if (!token) {
+            navigation.navigate('Auth')
         }
-
-        checkTokenValidity()
     }, [token])
-
-    if (!isNavigatorReady) {
-        // Return a loading indicator or any other appropriate component
-        return null
-    }
-    if (!token) {
-        navigation.navigate('Auth')
-    }
 
     return (
         <RootStack.Navigator screenOptions={{ ...defaultStackOptions }}>
