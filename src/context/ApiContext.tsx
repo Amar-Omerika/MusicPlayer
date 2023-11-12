@@ -7,9 +7,11 @@ export const useApi = (): any => {
 }
 
 const ApiContextProvider = ({ children }: any) => {
+    const [loading, setLoading] = useState(false)
     const [user, setUser] = useState(null)
     const [mostPopularPlaylist, setMostPopularPlaylist] = useState()
     const [newReleasePlaylist, setNewReleasePlaylist] = useState()
+    const [currentUserPlaylist, setcurrentUserPlaylist] = useState()
 
     const value: any = {
         user,
@@ -17,7 +19,11 @@ const ApiContextProvider = ({ children }: any) => {
         mostPopularPlaylist,
         setMostPopularPlaylist,
         newReleasePlaylist,
-        setNewReleasePlaylist
+        setNewReleasePlaylist,
+        currentUserPlaylist,
+        setcurrentUserPlaylist,
+        loading,
+        setLoading
     }
 
     return <ApiContext.Provider value={value}>{children}</ApiContext.Provider>

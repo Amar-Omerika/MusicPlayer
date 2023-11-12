@@ -14,6 +14,8 @@ import apiHelper from '../../utils/apiHelper'
 import { CustomText, Wrapper } from '../../components'
 import { HomePlayIcon } from '../../assets'
 import { useApi } from '../../context/ApiContext'
+import { useAuth } from '../../context/AuthContext'
+import { ScrollView } from 'react-native-gesture-handler'
 
 const Home = () => {
     const {
@@ -22,10 +24,15 @@ const Home = () => {
         mostPopularPlaylist,
         setMostPopularPlaylist,
         newReleasePlaylist,
-        setNewReleasePlaylist
+        setNewReleasePlaylist,
+        currentUserPlaylist,
+        setcurrentUserPlaylist
+        // loading,
+        // setLoading
     } = useApi()
+    const { token } = useAuth()
     const [greetingMessage, setGreetingMessage] = useState<string>('')
-
+    const [loading, setLoading] = useState(false)
     //useEffect for greeting message
     useEffect(() => {
         // Get the current time
@@ -55,9 +62,10 @@ const Home = () => {
         fetchUserData()
         fetchMostPopularPlaylist()
         fetchNewReleasePlaylist()
+        fetchCurrentUserPlaylist()
     }, [])
     const fetchUserData = async () => {
-        const token: string = (await AsyncStorage.getItem('token')) as string //type assertion
+        setLoading(true) // Set loading to true before making the request
         try {
             const result = await apiHelper<string>(
                 'get',
@@ -69,10 +77,12 @@ const Home = () => {
             setUser(result.data)
         } catch (error) {
             console.error('Request Error:', error)
+        } finally {
+            setLoading(false) // Set loading to false regardless of success or error
         }
     }
     const fetchMostPopularPlaylist = async () => {
-        const token: string = (await AsyncStorage.getItem('token')) as string //type assertion
+        setLoading(true) // Set loading to true before making the request
         try {
             const result = await apiHelper<string>(
                 'get',
@@ -84,11 +94,13 @@ const Home = () => {
             setMostPopularPlaylist(result.data)
         } catch (error) {
             console.error('Request Error:', error)
+        } finally {
+            setLoading(false) // Set loading to false regardless of success or error
         }
     }
 
     const fetchNewReleasePlaylist = async () => {
-        const token: string = (await AsyncStorage.getItem('token')) as string //type assertion
+        setLoading(true)
         try {
             const result = await apiHelper<string>(
                 'get',
@@ -100,15 +112,29 @@ const Home = () => {
             setNewReleasePlaylist(result.data)
         } catch (error) {
             console.error('Request Error:', error)
+        } finally {
+            setLoading(false) // Set loading to false regardless of success or error
         }
     }
-
+    const fetchCurrentUserPlaylist = async () => {
+        try {
+            const result = await apiHelper<string>(
+                'get',
+                '/me/playlists',
+                undefined,
+                undefined,
+                token
+            ) // GET request with Bearer token
+            setcurrentUserPlaylist(result.data)
+        } catch (error) {
+            console.error('Request Error:', error)
+        }
+    }
     interface ItemProps {
         title: any
         coverImage?: any
         description: string
     }
-
     const Item = ({ title, description, coverImage }: ItemProps) => (
         <View style={styles.container}>
             <ImageBackground
@@ -124,6 +150,7 @@ const Home = () => {
                 <View style={styles.itemCardBluredViewContent}>
                     <View style={styles.leftItemCardBluredViewContent}>
                         <CustomText
+                            numberOfLines={1}
                             fontSize="h5"
                             fontWeight="bold"
                             style={styles.titleMostPopularPadding}
@@ -167,6 +194,38 @@ const Home = () => {
                 <View style={styles.itemCardBluredViewContent}>
                     <View style={styles.leftItemCardBluredViewContent}>
                         <CustomText
+                            numberOfLines={2}
+                            fontSize="h5"
+                            fontWeight="bold"
+                            style={styles.titleMostPopularPadding}
+                        >
+                            {title}
+                        </CustomText>
+                    </View>
+                </View>
+            </ImageBackground>
+        </View>
+    )
+    interface ItemUserPlaylist {
+        title: any
+        coverImage?: any
+    }
+    const ItemUserPlaylist = ({ title, coverImage }: ItemUserPlaylist) => (
+        <View style={styles.container1}>
+            <ImageBackground
+                source={{ uri: coverImage }}
+                style={styles.backgroundImage}
+            >
+                <BlurView
+                    style={styles.absolute}
+                    blurType="light"
+                    blurAmount={20}
+                    reducedTransparencyFallbackColor="white"
+                />
+                <View style={styles.itemCardBluredViewContent}>
+                    <View style={styles.leftItemCardBluredViewContent}>
+                        <CustomText
+                            numberOfLines={2}
                             fontSize="h5"
                             fontWeight="bold"
                             style={styles.titleMostPopularPadding}
@@ -180,74 +239,106 @@ const Home = () => {
     )
     return (
         <SafeAreaView style={styles.safeAreaContainer}>
-            <Wrapper>
-                <View style={styles.header}>
-                    <View style={styles.contentHeaderView}>
-                        {user && user.images && user.images[1] && (
-                            <Image
-                                source={{ uri: user.images[1].url }}
-                                style={styles.imageHeader}
-                            />
-                        )}
+            {loading ? (
+                <CustomText>...</CustomText>
+            ) : (
+                <ScrollView
+                    style={{
+                        flex: 1
+                    }}
+                >
+                    <Wrapper>
+                        <View style={styles.header}>
+                            <View style={styles.contentHeaderView}>
+                                {user && user.images && user.images[1] && (
+                                    <Image
+                                        source={{ uri: user.images[1].url }}
+                                        style={styles.imageHeader}
+                                    />
+                                )}
 
-                        <View style={styles.headertext}>
-                            <CustomText fontSize="h5" fontWeight="400">
-                                {greetingMessage}
-                            </CustomText>
-                            <CustomText
-                                color="mediumGrey"
-                                fontSize="h6"
-                                fontWeight="400"
-                            >
-                                {user && user.display_name}
-                            </CustomText>
+                                <View style={styles.headertext}>
+                                    <CustomText fontSize="h5" fontWeight="400">
+                                        {greetingMessage}
+                                    </CustomText>
+                                    <CustomText
+                                        color="mediumGrey"
+                                        fontSize="h6"
+                                        fontWeight="400"
+                                    >
+                                        {user && user.display_name}
+                                    </CustomText>
+                                </View>
+                            </View>
                         </View>
-                    </View>
-                </View>
-                <CustomText
-                    fontSize="h4"
-                    fontWeight="400"
-                    style={{ marginTop: 10 }}
-                >
-                    {mostPopularPlaylist && mostPopularPlaylist?.message}
-                </CustomText>
-                <View>
-                    <FlatList
-                        data={mostPopularPlaylist?.playlists.items}
-                        horizontal
-                        showsHorizontalScrollIndicator={false} // optional, hide horizontal scrollbar
-                        renderItem={({ item }) => (
-                            <Item
-                                title={item?.name}
-                                description={item?.description}
-                                coverImage={item?.images[0].url}
+                        <CustomText
+                            fontSize="h4"
+                            fontWeight="400"
+                            style={{ marginTop: 10 }}
+                        >
+                            {mostPopularPlaylist &&
+                                mostPopularPlaylist?.message}
+                        </CustomText>
+                        <View>
+                            <FlatList
+                                data={mostPopularPlaylist?.playlists.items}
+                                horizontal
+                                showsHorizontalScrollIndicator={false} // optional, hide horizontal scrollbar
+                                renderItem={({ item }) => (
+                                    <Item
+                                        title={item?.name}
+                                        description={item?.description}
+                                        coverImage={item?.images[0].url}
+                                    />
+                                )}
+                                keyExtractor={item => item?.id}
                             />
-                        )}
-                        keyExtractor={item => item.id}
-                    />
-                </View>
-                <CustomText
-                    fontSize="h4"
-                    fontWeight="400"
-                    style={{ marginTop: 20 }}
-                >
-                    New Release
-                </CustomText>
-                <View>
-                    <FlatList
-                        data={newReleasePlaylist?.albums.items}
-                        horizontal
-                        showsHorizontalScrollIndicator={false} // optional, hide horizontal scrollbar
-                        renderItem={({ item }) => (
-                            <ItemNewRelease
-                                title={item?.name}
-                                coverImage={item?.images[0].url}
+                        </View>
+                        <CustomText
+                            fontSize="h4"
+                            fontWeight="400"
+                            style={{ marginTop: 20 }}
+                        >
+                            New Release
+                        </CustomText>
+                        <View>
+                            <FlatList
+                                data={newReleasePlaylist?.albums.items}
+                                horizontal
+                                showsHorizontalScrollIndicator={false} // optional, hide horizontal scrollbar
+                                renderItem={({ item }) => (
+                                    <ItemNewRelease
+                                        title={item?.name}
+                                        coverImage={item?.images[0].url}
+                                    />
+                                )}
+                                keyExtractor={item => item?.id}
                             />
-                        )}
-                        keyExtractor={item => item.id}
-                    />
-                </View>
-            </Wrapper>
+                        </View>
+                        <CustomText
+                            fontSize="h4"
+                            fontWeight="400"
+                            style={{ marginTop: 20 }}
+                        >
+                            My playlists
+                        </CustomText>
+                        <View style={{ marginBottom: 30 }}>
+                            <FlatList
+                                data={currentUserPlaylist?.items}
+                                horizontal
+                                showsHorizontalScrollIndicator={false} // optional, hide horizontal scrollbar
+                                renderItem={({ item }) => (
+                                    <ItemUserPlaylist
+                                        title={item?.name}
+                                        coverImage={item?.images[0].url}
+                                    />
+                                )}
+                                keyExtractor={item => item?.id}
+                            />
+                        </View>
+                    </Wrapper>
+                </ScrollView>
+            )}
         </SafeAreaView>
     )
 }
