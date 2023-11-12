@@ -1,6 +1,5 @@
 import React, { useContext, createContext, useState, useEffect } from 'react'
 import apiHelper from '../utils/apiHelper'
-import { useAuth } from './AuthContext'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const ApiContext = createContext(null)
@@ -31,12 +30,13 @@ const ApiContextProvider = ({ children }: any) => {
             } catch (error) {
                 console.error('Error fetching data:', error)
             } finally {
-                setLoading(false)
+                // setLoading(false)
             }
         }
 
         fetchData()
     }, [])
+
     const fetchUserData = async () => {
         const token = await AsyncStorage.getItem('token')
         const accessTokenNonNull: string = token!

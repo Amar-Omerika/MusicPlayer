@@ -9,13 +9,10 @@ import {
 } from 'react-native'
 import { BlurView } from '@react-native-community/blur'
 import { ThemeColors } from '../../constants/ThemeColors'
-import apiHelper from '../../utils/apiHelper'
-import { CustomText, Wrapper } from '../../components'
+import { CustomText, Wrapper, AnimatedLoader } from '../../components'
 import { HomePlayIcon } from '../../assets'
 import { useApi } from '../../context/ApiContext'
-import { useAuth } from '../../context/AuthContext'
 import { ScrollView } from 'react-native-gesture-handler'
-
 const Home = () => {
     const {
         user,
@@ -25,6 +22,15 @@ const Home = () => {
         loading
     } = useApi()
     const [greetingMessage, setGreetingMessage] = useState<string>('')
+    const [showLoader, setShowLoader] = useState(true)
+
+    useEffect(() => {
+        const loaderTimeout = setTimeout(() => {
+            setShowLoader(false)
+        }, 3000)
+
+        return () => clearTimeout(loaderTimeout) // Cleanup the timeout to avoid memory leaks
+    }, []) // Empty dependency array to ensure the effect runs only once
 
     //useEffect for greeting message
     useEffect(() => {
@@ -161,7 +167,7 @@ const Home = () => {
 
     return (
         <SafeAreaView style={styles.safeAreaContainer}>
-            {!loading ? (
+            {!showLoader && !loading ? (
                 <ScrollView
                     style={{
                         flex: 1
@@ -259,7 +265,7 @@ const Home = () => {
                     </Wrapper>
                 </ScrollView>
             ) : (
-                <CustomText>sdsd</CustomText>
+                <AnimatedLoader />
             )}
         </SafeAreaView>
     )

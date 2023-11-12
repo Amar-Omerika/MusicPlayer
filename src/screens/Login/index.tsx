@@ -2,7 +2,6 @@ import React, { useEffect } from 'react'
 import {
     Image,
     SafeAreaView,
-    ScrollView,
     StyleSheet,
     TouchableOpacity,
     View
