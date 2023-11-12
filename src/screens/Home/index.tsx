@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import {
     SafeAreaView,
     StyleSheet,
@@ -20,19 +19,13 @@ import { ScrollView } from 'react-native-gesture-handler'
 const Home = () => {
     const {
         user,
-        setUser,
         mostPopularPlaylist,
-        setMostPopularPlaylist,
         newReleasePlaylist,
-        setNewReleasePlaylist,
         currentUserPlaylist,
-        setcurrentUserPlaylist
-        // loading,
-        // setLoading
+        loading
     } = useApi()
-    const { token } = useAuth()
     const [greetingMessage, setGreetingMessage] = useState<string>('')
-    const [loading, setLoading] = useState(false)
+
     //useEffect for greeting message
     useEffect(() => {
         // Get the current time
@@ -57,79 +50,7 @@ const Home = () => {
             setGreetingMessage(greetingMessages.night)
         }
     }, [])
-    //useEffect for fetching playlists
-    useEffect(() => {
-        fetchUserData()
-        fetchMostPopularPlaylist()
-        fetchNewReleasePlaylist()
-        fetchCurrentUserPlaylist()
-    }, [])
-    const fetchUserData = async () => {
-        setLoading(true) // Set loading to true before making the request
-        try {
-            const result = await apiHelper<string>(
-                'get',
-                '/me',
-                undefined,
-                undefined,
-                token
-            ) // GET request with Bearer token
-            setUser(result.data)
-        } catch (error) {
-            console.error('Request Error:', error)
-        } finally {
-            setLoading(false) // Set loading to false regardless of success or error
-        }
-    }
-    const fetchMostPopularPlaylist = async () => {
-        setLoading(true) // Set loading to true before making the request
-        try {
-            const result = await apiHelper<string>(
-                'get',
-                '/browse/featured-playlists',
-                undefined,
-                undefined,
-                token
-            ) // GET request with Bearer token
-            setMostPopularPlaylist(result.data)
-        } catch (error) {
-            console.error('Request Error:', error)
-        } finally {
-            setLoading(false) // Set loading to false regardless of success or error
-        }
-    }
 
-    const fetchNewReleasePlaylist = async () => {
-        setLoading(true)
-        try {
-            const result = await apiHelper<string>(
-                'get',
-                '/browse/new-releases',
-                undefined,
-                undefined,
-                token
-            ) // GET request with Bearer token
-            setNewReleasePlaylist(result.data)
-        } catch (error) {
-            console.error('Request Error:', error)
-        } finally {
-            setLoading(false) // Set loading to false regardless of success or error
-        }
-    }
-    const fetchCurrentUserPlaylist = async () => {
-        try {
-            const result = await apiHelper<string>(
-                'get',
-                '/me/playlists',
-                undefined,
-                undefined,
-                token
-            ) // GET request with Bearer token
-            setcurrentUserPlaylist(result.data)
-        } catch (error) {
-            console.error('Request Error:', error)
-        }
-    }
     interface ItemProps {
         title: any
         coverImage?: any
@@ -237,11 +158,10 @@ const Home = () => {
             </ImageBackground>
         </View>
     )
+
     return (
         <SafeAreaView style={styles.safeAreaContainer}>
-            {loading ? (
-                <CustomText>...</CustomText>
-            ) : (
+            {!loading ? (
                 <ScrollView
                     style={{
                         flex: 1
@@ -309,7 +229,7 @@ const Home = () => {
                                 renderItem={({ item }) => (
                                     <ItemNewRelease
                                         title={item?.name}
-                                        coverImage={item?.images[0].url}
+                                        coverImage={item && item?.images[0].url}
                                     />
                                 )}
                                 keyExtractor={item => item?.id}
@@ -338,6 +258,8 @@ const Home = () => {
                         </View>
                     </Wrapper>
                 </ScrollView>
+            ) : (
+                <CustomText>sdsd</CustomText>
             )}
         </SafeAreaView>
     )
