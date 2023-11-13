@@ -30,7 +30,7 @@ const Home = () => {
         }, 3000)
 
         return () => clearTimeout(loaderTimeout) // Cleanup the timeout to avoid memory leaks
-    }, []) // Empty dependency array to ensure the effect runs only once
+    }, [])
 
     //useEffect for greeting message
     useEffect(() => {

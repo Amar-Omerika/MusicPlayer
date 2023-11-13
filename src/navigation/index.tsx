@@ -6,6 +6,7 @@ import { ThemeColors } from '../constants/ThemeColors'
 //screens
 import Login from '../screens/Login'
 import Home from '../screens/Home'
+import SearchScreen from '../screens/Search'
 
 //images
 import {
@@ -16,7 +17,6 @@ import {
     LibraryActiveIcon,
     LibraryInActiveIcon
 } from '../assets'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useAuth } from '../context/AuthContext'
 
 const defaultStackOptions = {
@@ -43,7 +43,7 @@ const TabBarConfig = [
         tabBarLabel: 'Home'
     },
     {
-        screen: Home,
+        screen: SearchScreen,
         activeIcon: SearchActiveIcon,
         inactiveIcon: SearchInActiveIcon,
         tabBarLabel: 'Search'
