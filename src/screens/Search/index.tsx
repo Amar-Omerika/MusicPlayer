@@ -1,47 +1,43 @@
 import React, { useState } from 'react'
-import {
-    FlatList,
-    Image,
-    SafeAreaView,
-    StyleSheet,
-    TextInput,
-    View
-} from 'react-native'
+import { FlatList, Image, SafeAreaView, StyleSheet, View } from 'react-native'
 import { CustomText, Wrapper, SearchBox } from '../../components'
 import { ThemeColors } from '../../constants/ThemeColors'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { useApi } from '../../context/ApiContext'
+import randomcolor from 'randomcolor'
 interface ItemProps {
     title: any
     image?: any
-    backgroundColor?: string // Add this line
 }
 
 const SearchScreen = () => {
     const { categories } = useApi()
-    const Item = ({ title, image, backgroundColor }: ItemProps) => (
-        <View style={[styles.itemParentView, { backgroundColor }]}>
-            <View style={styles.itemContentView}>
-                <CustomText
-                    numberOfLines={2}
-                    fontSize="h6"
-                    fontWeight="700"
-                    style={{
-                        margin: 5,
-                        width: '60%'
-                    }}
-                >
-                    {title}
-                </CustomText>
-                <Image
-                    source={{
-                        uri: image
-                    }}
-                    style={styles.itemImageStyling}
-                />
+    const Item = ({ title, image }: ItemProps) => {
+        const backgroundColor = randomcolor() // Generate a random color
+        return (
+            <View style={[styles.itemParentView, { backgroundColor }]}>
+                <View style={styles.itemContentView}>
+                    <CustomText
+                        numberOfLines={2}
+                        fontSize="h6"
+                        fontWeight="700"
+                        style={{
+                            margin: 5,
+                            width: '60%'
+                        }}
+                    >
+                        {title}
+                    </CustomText>
+                    <Image
+                        source={{
+                            uri: image
+                        }}
+                        style={styles.itemImageStyling}
+                    />
+                </View>
             </View>
-        </View>
-    )
+        )
+    }
 
     return (
         <SafeAreaView style={styles.safeAreaContainer}>
@@ -57,7 +53,7 @@ const SearchScreen = () => {
                 <CustomText
                     fontSize="h6"
                     fontWeight="400"
-                    style={{ marginTop: 20 }}
+                    style={{ marginTop: 20, marginBottom: 10 }}
                 >
                     Browse categories
                 </CustomText>
@@ -65,13 +61,7 @@ const SearchScreen = () => {
                     data={categories?.categories.items}
                     showsHorizontalScrollIndicator={false} // optional, hide horizontal scrollbar
                     renderItem={({ item, index }) => (
-                        <Item
-                            title={item?.name}
-                            image={item?.icons[0].url}
-                            backgroundColor={
-                                index % 2 === 0 ? 'lightblue' : 'lightgreen'
-                            }
-                        />
+                        <Item title={item?.name} image={item?.icons[0].url} />
                     )}
                     keyExtractor={item => item?.id}
                     numColumns={2}
@@ -88,12 +78,12 @@ const styles = StyleSheet.create({
         backgroundColor: ThemeColors.lightBlack
     },
     itemParentView: {
-        flex: 1
+        flex: 1,
+        margin: 5
     },
     itemContentView: {
         height: '20%',
         flex: 1,
-        margin: 5,
         borderRadius: 8,
         flexDirection: 'row',
         overflow: 'hidden'

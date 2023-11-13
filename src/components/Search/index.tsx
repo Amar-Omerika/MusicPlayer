@@ -17,7 +17,10 @@ const SearchBox = ({ onSearch }: any) => {
                 style={styles.input}
                 placeholder="Categories"
                 value={searchText}
-                onChangeText={text => setSearchText(text)}
+                onChangeText={text => {
+                    setSearchText(text)
+                    onSearch(text) // Call the onSearch prop whenever the text changes
+                }}
                 onSubmitEditing={handleSearch}
             />
         </View>
