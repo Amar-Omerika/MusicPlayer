@@ -13,6 +13,21 @@ import { CustomText, Wrapper, AnimatedLoader } from '../../components'
 import { HomePlayIcon } from '../../assets'
 import { useApi } from '../../context/ApiContext'
 import { ScrollView } from 'react-native-gesture-handler'
+
+interface ItemProps {
+    title: any
+    coverImage?: any
+    description: string
+}
+interface ItemNewReleaseProps {
+    title: any
+    coverImage?: any
+}
+interface ItemUserPlaylist {
+    title: any
+    coverImage?: any
+}
+
 const Home = () => {
     const {
         user,
@@ -57,11 +72,6 @@ const Home = () => {
         }
     }, [])
 
-    interface ItemProps {
-        title: any
-        coverImage?: any
-        description: string
-    }
     const Item = ({ title, description, coverImage }: ItemProps) => (
         <View style={styles.container}>
             <ImageBackground
@@ -102,10 +112,7 @@ const Home = () => {
             </ImageBackground>
         </View>
     )
-    interface ItemNewReleaseProps {
-        title: any
-        coverImage?: any
-    }
+
     const ItemNewRelease = ({ title, coverImage }: ItemNewReleaseProps) => (
         <View style={styles.container1}>
             <ImageBackground
@@ -133,10 +140,7 @@ const Home = () => {
             </ImageBackground>
         </View>
     )
-    interface ItemUserPlaylist {
-        title: any
-        coverImage?: any
-    }
+
     const ItemUserPlaylist = ({ title, coverImage }: ItemUserPlaylist) => (
         <View style={styles.container1}>
             <ImageBackground

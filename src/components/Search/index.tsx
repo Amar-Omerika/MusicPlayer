@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#ccc',
         backgroundColor: 'white',
-        margin: 10
+        marginTop: 10
     },
     icon: {
         marginRight: 10

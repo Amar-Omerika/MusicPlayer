@@ -14,6 +14,7 @@ const ApiContextProvider = ({ children }: any) => {
     const [mostPopularPlaylist, setMostPopularPlaylist] = useState<any>()
     const [newReleasePlaylist, setNewReleasePlaylist] = useState<any>()
     const [currentUserPlaylist, setcurrentUserPlaylist] = useState<any>()
+    const [categories, setCategories] = useState<any>()
 
     useEffect(() => {
         const fetchData = async () => {
@@ -25,7 +26,8 @@ const ApiContextProvider = ({ children }: any) => {
                     fetchUserData(),
                     fetchMostPopularPlaylist(),
                     fetchNewReleasePlaylist(),
-                    fetchCurrentUserPlaylist()
+                    fetchCurrentUserPlaylist(),
+                    fetchCategories()
                 ])
             } catch (error) {
                 console.error('Error fetching data:', error)
@@ -111,6 +113,22 @@ const ApiContextProvider = ({ children }: any) => {
             console.error('Request Error:', error)
         }
     }
+    const fetchCategories = async () => {
+        const token = await AsyncStorage.getItem('token')
+        const accessTokenNonNull: string = token!
+        try {
+            const result = await apiHelper<string>(
+                'get',
+                '/browse/categories',
+                undefined,
+                undefined,
+                accessTokenNonNull
+            ) // GET request with Bearer token
+            setCategories(result.data)
+        } catch (error) {
+            console.error('Request Error:', error)
+        }
+    }
 
     const value: any = {
         user,
@@ -122,7 +140,9 @@ const ApiContextProvider = ({ children }: any) => {
         currentUserPlaylist,
         setcurrentUserPlaylist,
         loading,
-        setLoading
+        setLoading,
+        categories,
+        setCategories
     }
 
     return <ApiContext.Provider value={value}>{children}</ApiContext.Provider>
