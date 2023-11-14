@@ -67,7 +67,10 @@ const SearchScreen = () => {
                 >
                     Search
                 </CustomText>
-                <SearchBox onSearch={handleSearch} />
+                <SearchBox
+                    onSearch={handleSearch}
+                    placeholder="Categories..."
+                />
                 <CustomText
                     fontSize="h6"
                     fontWeight="400"

@@ -7,6 +7,7 @@ import { ThemeColors } from '../constants/ThemeColors'
 import Login from '../screens/Login'
 import Home from '../screens/Home'
 import SearchScreen from '../screens/Search'
+import LibraryScreen from '../screens/LibraryScreen'
 
 //images
 import {
@@ -49,7 +50,7 @@ const TabBarConfig = [
         tabBarLabel: 'Search'
     },
     {
-        screen: Home,
+        screen: LibraryScreen,
         activeIcon: LibraryActiveIcon,
         inactiveIcon: LibraryInActiveIcon,
         tabBarLabel: 'Your Library'

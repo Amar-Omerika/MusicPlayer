@@ -2,7 +2,11 @@ import React, { useState } from 'react'
 import { View, TextInput, StyleSheet } from 'react-native'
 import { SearchInActiveIcon } from '../../assets'
 
-const SearchBox = ({ onSearch }: any) => {
+interface Props {
+    onSearch?: any
+    placeholder?: string
+}
+const SearchBox = ({ onSearch, placeholder }: Props) => {
     const [searchText, setSearchText] = useState<string>('')
 
     const handleSearch = () => {
@@ -15,7 +19,7 @@ const SearchBox = ({ onSearch }: any) => {
             <SearchInActiveIcon style={styles.icon} />
             <TextInput
                 style={styles.input}
-                placeholder="Categories"
+                placeholder={placeholder}
                 value={searchText}
                 onChangeText={text => {
                     setSearchText(text)
