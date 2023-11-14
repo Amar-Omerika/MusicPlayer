@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { FlatList, Image, SafeAreaView, StyleSheet, View } from 'react-native'
 import { CustomText, Wrapper, SearchBox } from '../../components'
 import { ThemeColors } from '../../constants/ThemeColors'
@@ -12,6 +12,24 @@ interface ItemProps {
 
 const SearchScreen = () => {
     const { categories } = useApi()
+    const [filteredCategories, setFilteredCategories] = useState(
+        categories?.categories.items
+    )
+
+    //To prevent retriggering the render every time the user types
+    // something in the SearchBox component, we  use
+    //the useCallback hook to memoize the handleSearch function.
+    const handleSearch = useCallback(
+        (searchText: string) => {
+            const filteredData = categories?.categories.items.filter(
+                (item: any) =>
+                    item.name.toLowerCase().includes(searchText.toLowerCase())
+            )
+            setFilteredCategories(filteredData)
+        },
+        [categories]
+    )
+
     const Item = ({ title, image }: ItemProps) => {
         const backgroundColor = randomcolor() // Generate a random color
         return (
@@ -49,7 +67,7 @@ const SearchScreen = () => {
                 >
                     Search
                 </CustomText>
-                <SearchBox />
+                <SearchBox onSearch={handleSearch} />
                 <CustomText
                     fontSize="h6"
                     fontWeight="400"
@@ -58,7 +76,7 @@ const SearchScreen = () => {
                     Browse categories
                 </CustomText>
                 <FlatList
-                    data={categories?.categories.items}
+                    data={filteredCategories}
                     showsHorizontalScrollIndicator={false} // optional, hide horizontal scrollbar
                     renderItem={({ item, index }) => (
                         <Item title={item?.name} image={item?.icons[0].url} />
