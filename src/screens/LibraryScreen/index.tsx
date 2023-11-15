@@ -20,7 +20,9 @@ interface ItemProps {
 
 const LibraryScreen = () => {
     const { currentUserPlaylist, user } = useApi()
-    const [view, setView] = useState('list')
+    const [view, setView] = useState<any>(
+        AsyncStorage.getItem('view' ?? 'list')
+    )
 
     const [filteredCategories, setFilteredCategories] = useState(
         currentUserPlaylist?.items
