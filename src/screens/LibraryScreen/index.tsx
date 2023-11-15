@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import {
     FlatList,
     Image,
@@ -11,6 +11,7 @@ import { CustomText, Wrapper, SearchBox } from '../../components'
 import { ThemeColors } from '../../constants/ThemeColors'
 import { useApi } from '../../context/ApiContext'
 import { GridIcon, ListIcon } from '../../assets'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 interface ItemProps {
     title: any
     image?: any
@@ -20,11 +21,36 @@ interface ItemProps {
 const LibraryScreen = () => {
     const { currentUserPlaylist, user } = useApi()
     const [view, setView] = useState('list')
+
     const [filteredCategories, setFilteredCategories] = useState(
         currentUserPlaylist?.items
     )
-    const handleView = (view: string) => {
-        setView(view)
+
+    // Load view state from local storage on component mount
+    useEffect(() => {
+        const loadViewState = async () => {
+            try {
+                const savedView = await AsyncStorage.getItem('view')
+                if (savedView !== null) {
+                    setView(savedView)
+                }
+            } catch (error) {
+                console.error('Error loading view state:', error)
+            }
+        }
+
+        loadViewState()
+    }, []) // Empty dependency array ensures this effect runs only once on mount
+
+    const handleView = (newView: string) => {
+        setView(newView)
+
+        // Save view state to local storage
+        try {
+            AsyncStorage.setItem('view', newView)
+        } catch (error) {
+            console.error('Error saving view state:', error)
+        }
     }
 
     //To prevent retriggering the render every time the user types
