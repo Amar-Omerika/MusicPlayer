@@ -1,8 +1,14 @@
 import React, { useCallback, useState } from 'react'
-import { FlatList, Image, SafeAreaView, StyleSheet, View } from 'react-native'
+import {
+    FlatList,
+    Image,
+    SafeAreaView,
+    StyleSheet,
+    TouchableOpacity,
+    View
+} from 'react-native'
 import { CustomText, Wrapper, SearchBox } from '../../components'
 import { ThemeColors } from '../../constants/ThemeColors'
-import { TouchableOpacity } from 'react-native-gesture-handler'
 import { useApi } from '../../context/ApiContext'
 import { GridIcon, ListIcon } from '../../assets'
 interface ItemProps {
@@ -13,9 +19,13 @@ interface ItemProps {
 
 const LibraryScreen = () => {
     const { currentUserPlaylist, user } = useApi()
+    const [view, setView] = useState('list')
     const [filteredCategories, setFilteredCategories] = useState(
         currentUserPlaylist?.items
     )
+    const handleView = (view: string) => {
+        setView(view)
+    }
 
     //To prevent retriggering the render every time the user types
     // something in the SearchBox component, we  use
@@ -63,6 +73,37 @@ const LibraryScreen = () => {
             </View>
         )
     }
+    const ItemGrid = ({ title, image, ownerName }: ItemProps) => {
+        return (
+            <View style={[styles.itemParentGridView]}>
+                <Image
+                    source={{
+                        uri: image
+                    }}
+                    style={styles.itemImageGridStyling}
+                />
+                <CustomText
+                    numberOfLines={1}
+                    fontSize="h6"
+                    fontWeight="700"
+                    style={{
+                        marginTop: 5,
+                        marginBottom: 5
+                    }}
+                >
+                    {title}
+                </CustomText>
+                <CustomText
+                    numberOfLines={1}
+                    color="lightGrey"
+                    fontWeight="400"
+                    style={{ marginBottom: 5 }}
+                >
+                    Playlist - {ownerName}
+                </CustomText>
+            </View>
+        )
+    }
 
     return (
         <SafeAreaView style={styles.safeAreaContainer}>
@@ -80,9 +121,24 @@ const LibraryScreen = () => {
                                 Your Library
                             </CustomText>
                         </View>
-                        <View style={styles.changeLayoutIcon}>
-                            <GridIcon />
-                        </View>
+                        {view === 'list' && (
+                            <View style={styles.changeLayoutIcon}>
+                                <TouchableOpacity
+                                    onPress={() => handleView('grid')}
+                                >
+                                    <GridIcon />
+                                </TouchableOpacity>
+                            </View>
+                        )}
+                        {view === 'grid' && (
+                            <View style={styles.changeLayoutIcon}>
+                                <TouchableOpacity
+                                    onPress={() => handleView('list')}
+                                >
+                                    <ListIcon />
+                                </TouchableOpacity>
+                            </View>
+                        )}
                     </View>
                 </View>
                 <View style={{ paddingBottom: 10 }}>
@@ -91,27 +147,12 @@ const LibraryScreen = () => {
                         placeholder="Playlists..."
                     />
                 </View>
-                <FlatList
-                    data={[
-                        { type: 'header', text: 'Most recent' },
-                        ...filteredCategories
-                    ]}
-                    showsHorizontalScrollIndicator={false}
-                    renderItem={({ item }) => {
-                        if (item.type === 'header') {
-                            return (
-                                <CustomText
-                                    fontSize="h6"
-                                    fontWeight="400"
-                                    style={{
-                                        marginTop: 10,
-                                        marginBottom: 10
-                                    }}
-                                >
-                                    {item.text}
-                                </CustomText>
-                            )
-                        } else {
+                {view === 'list' ? (
+                    <FlatList
+                        key={'#'}
+                        data={[...filteredCategories]}
+                        showsHorizontalScrollIndicator={false}
+                        renderItem={({ item }) => {
                             return (
                                 <ItemList
                                     title={item?.name}
@@ -119,12 +160,25 @@ const LibraryScreen = () => {
                                     ownerName={item?.owner.display_name}
                                 />
                             )
-                        }
-                    }}
-                    keyExtractor={(item, index) =>
-                        `${item.type}_${item.id ?? index}`
-                    }
-                />
+                        }}
+                    />
+                ) : (
+                    <FlatList
+                        key={'_'}
+                        data={[...filteredCategories]}
+                        showsHorizontalScrollIndicator={false}
+                        renderItem={({ item }) => {
+                            return (
+                                <ItemGrid
+                                    title={item?.name}
+                                    image={item?.images[0].url}
+                                    ownerName={item?.owner.display_name}
+                                />
+                            )
+                        }}
+                        numColumns={2}
+                    />
+                )}
             </Wrapper>
         </SafeAreaView>
     )
@@ -172,5 +226,16 @@ const styles = StyleSheet.create({
         width: 70,
         height: 70,
         borderRadius: 5
+    },
+    //itemGridStyling
+    itemParentGridView: {
+        flex: 1,
+        margin: 5
+    },
+    itemImageGridStyling: {
+        height: 150,
+        flex: 1,
+        borderRadius: 8,
+        flexDirection: 'column'
     }
 })
