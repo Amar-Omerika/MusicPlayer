@@ -9,7 +9,7 @@ export const useApi = (): any => {
 }
 
 const ApiContextProvider = ({ children }: any) => {
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true) // Set initial loading to true
     const [user, setUser] = useState<any>(null)
     const [mostPopularPlaylist, setMostPopularPlaylist] = useState<any>()
     const [newReleasePlaylist, setNewReleasePlaylist] = useState<any>()
@@ -20,7 +20,6 @@ const ApiContextProvider = ({ children }: any) => {
         const fetchData = async () => {
             try {
                 setLoading(true)
-
                 // Fetch data for all APIs
                 await Promise.all([
                     fetchUserData(),
@@ -35,14 +34,13 @@ const ApiContextProvider = ({ children }: any) => {
                 // setLoading(false)
             }
         }
-
         fetchData()
     }, [])
 
     const fetchUserData = async () => {
         const token = await AsyncStorage.getItem('token')
         const accessTokenNonNull: string = token!
-        setLoading(true) // Set loading to true before making the request
+        setLoading(true)
         try {
             const result = await apiHelper<string>(
                 'get',
@@ -55,13 +53,12 @@ const ApiContextProvider = ({ children }: any) => {
         } catch (error) {
             console.error('Request Error:', error)
         } finally {
-            setLoading(false) // Set loading to false regardless of success or error
+            setLoading(false)
         }
     }
     const fetchMostPopularPlaylist = async () => {
         const token = await AsyncStorage.getItem('token')
         const accessTokenNonNull: string = token!
-        setLoading(true) // Set loading to true before making the request
         try {
             const result = await apiHelper<string>(
                 'get',
@@ -74,7 +71,6 @@ const ApiContextProvider = ({ children }: any) => {
         } catch (error) {
             console.error('Request Error:', error)
         } finally {
-            setLoading(false) // Set loading to false regardless of success or error
         }
     }
 
@@ -91,15 +87,16 @@ const ApiContextProvider = ({ children }: any) => {
                 accessTokenNonNull
             ) // GET request with Bearer token
             setNewReleasePlaylist(result.data)
+            setLoading(false)
         } catch (error) {
             console.error('Request Error:', error)
         } finally {
-            setLoading(false) // Set loading to false regardless of success or error
         }
     }
     const fetchCurrentUserPlaylist = async () => {
         const token = await AsyncStorage.getItem('token')
         const accessTokenNonNull: string = token!
+        setLoading(true)
         try {
             const result = await apiHelper<string>(
                 'get',
@@ -109,6 +106,7 @@ const ApiContextProvider = ({ children }: any) => {
                 accessTokenNonNull
             ) // GET request with Bearer token
             setcurrentUserPlaylist(result.data)
+            setLoading(false)
         } catch (error) {
             console.error('Request Error:', error)
         }
@@ -116,6 +114,7 @@ const ApiContextProvider = ({ children }: any) => {
     const fetchCategories = async () => {
         const token = await AsyncStorage.getItem('token')
         const accessTokenNonNull: string = token!
+        setLoading(true)
         try {
             const result = await apiHelper<string>(
                 'get',
@@ -125,6 +124,7 @@ const ApiContextProvider = ({ children }: any) => {
                 accessTokenNonNull
             ) // GET request with Bearer token
             setCategories(result.data)
+            setLoading(false)
         } catch (error) {
             console.error('Request Error:', error)
         }
@@ -142,7 +142,12 @@ const ApiContextProvider = ({ children }: any) => {
         loading,
         setLoading,
         categories,
-        setCategories
+        setCategories,
+        fetchUserData,
+        fetchMostPopularPlaylist,
+        fetchNewReleasePlaylist,
+        fetchCurrentUserPlaylist,
+        fetchCategories
     }
 
     return <ApiContext.Provider value={value}>{children}</ApiContext.Provider>

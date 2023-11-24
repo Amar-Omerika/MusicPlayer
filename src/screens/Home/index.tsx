@@ -37,15 +37,6 @@ const Home = () => {
         loading
     } = useApi()
     const [greetingMessage, setGreetingMessage] = useState<string>('')
-    const [showLoader, setShowLoader] = useState(true)
-
-    useEffect(() => {
-        const loaderTimeout = setTimeout(() => {
-            setShowLoader(false)
-        }, 3000)
-
-        return () => clearTimeout(loaderTimeout) // Cleanup the timeout to avoid memory leaks
-    }, [])
 
     //useEffect for greeting message
     useEffect(() => {
@@ -171,7 +162,7 @@ const Home = () => {
 
     return (
         <SafeAreaView style={styles.safeAreaContainer}>
-            {!showLoader && !loading ? (
+            {!loading ? (
                 <ScrollView
                     style={{
                         flex: 1

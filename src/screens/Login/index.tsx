@@ -12,6 +12,7 @@ import { ThemeColors } from '../../constants/ThemeColors'
 import { PersonImage } from '../../assets'
 import { authorize } from 'react-native-app-auth'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useAuth } from '../../context/AuthContext'
 
 const Login = () => {
     const navigation: any = useNavigation()

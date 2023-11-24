@@ -4,15 +4,15 @@ import { NavigationContainer } from '@react-navigation/native'
 import Navigator from './src/navigation'
 import { useAuth } from './src/context/AuthContext'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useApi } from './src/context/ApiContext'
 
 const App = () => {
     const { setToken } = useAuth()
+
     useEffect(() => {
         const checkTokenValidity = async () => {
             const accessToken = await AsyncStorage.getItem('token')
             const expirationDate = await AsyncStorage.getItem('expirationDate')
-            // console.log('acess token', accessToken)
-            // console.log('expiration date', expirationDate)
 
             if (accessToken && expirationDate) {
                 const currentTime = Date.now()
