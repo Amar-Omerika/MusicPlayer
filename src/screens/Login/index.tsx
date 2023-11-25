@@ -15,6 +15,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useAuth } from '../../context/AuthContext'
 
 const Login = () => {
+    const { setToken } = useAuth()
     const navigation: any = useNavigation()
     const handleLogin = async () => {
         authenticate()
@@ -36,14 +37,14 @@ const Login = () => {
             ]
         }
         const result = await authorize(config)
-        console.log(result)
+
         if (result.accessToken) {
             const expirationDate = new Date(
                 result.accessTokenExpirationDate
             ).getTime()
             AsyncStorage.setItem('token', result.accessToken)
             AsyncStorage.setItem('expirationDate', expirationDate.toString())
-            navigation.navigate('App')
+            setToken(result.accessToken)
         }
     }
     return (

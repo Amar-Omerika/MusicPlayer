@@ -8,7 +8,7 @@ export const useAuth = (): any => {
 
 const AuthContextProvider = ({ children }: any) => {
     const [token, setToken] = useState(null)
-    console.log(token)
+    console.log('token u auth contextu', token)
 
     const value: any = {
         token,

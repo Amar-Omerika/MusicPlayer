@@ -13,6 +13,8 @@ import { CustomText, Wrapper, AnimatedLoader } from '../../components'
 import { HomePlayIcon } from '../../assets'
 import { useApi } from '../../context/ApiContext'
 import { ScrollView } from 'react-native-gesture-handler'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useAuth } from '../../context/AuthContext'
 
 interface ItemProps {
     title: any
@@ -28,16 +30,118 @@ interface ItemUserPlaylist {
     coverImage?: any
 }
 
+const Item = ({ title, description, coverImage }: ItemProps) => (
+    <View style={styles.container}>
+        <ImageBackground
+            source={{ uri: coverImage }}
+            style={styles.backgroundImage}
+        >
+            <BlurView
+                style={styles.absolute}
+                blurType="light"
+                blurAmount={20}
+                reducedTransparencyFallbackColor="white"
+            />
+            <View style={styles.itemCardBluredViewContent}>
+                <View style={styles.leftItemCardBluredViewContent}>
+                    <CustomText
+                        numberOfLines={1}
+                        fontSize="h5"
+                        fontWeight="bold"
+                        style={styles.titleMostPopularPadding}
+                    >
+                        {title}
+                    </CustomText>
+                    <CustomText
+                        numberOfLines={1}
+                        color="lightGrey"
+                        fontWeight="400"
+                        style={styles.subtitleMostPopularPadding}
+                    >
+                        {description}
+                    </CustomText>
+                </View>
+                <View style={styles.rightItemCardBluredViewContent}>
+                    <View style={styles.playIconView}>
+                        <HomePlayIcon />
+                    </View>
+                </View>
+            </View>
+        </ImageBackground>
+    </View>
+)
+
+const ItemNewRelease = ({ title, coverImage }: ItemNewReleaseProps) => (
+    <View style={styles.container1}>
+        <ImageBackground
+            source={{ uri: coverImage }}
+            style={styles.backgroundImage}
+        >
+            <BlurView
+                style={styles.absolute}
+                blurType="light"
+                blurAmount={20}
+                reducedTransparencyFallbackColor="white"
+            />
+            <View style={styles.itemCardBluredViewContent}>
+                <View style={styles.leftItemCardBluredViewContent}>
+                    <CustomText
+                        numberOfLines={2}
+                        fontSize="h5"
+                        fontWeight="bold"
+                        style={styles.titleMostPopularPadding}
+                    >
+                        {title}
+                    </CustomText>
+                </View>
+            </View>
+        </ImageBackground>
+    </View>
+)
+
+const ItemUserPlaylist = ({ title, coverImage }: ItemUserPlaylist) => (
+    <View style={styles.container1}>
+        <ImageBackground
+            source={{ uri: coverImage }}
+            style={styles.backgroundImage}
+        >
+            <BlurView
+                style={styles.absolute}
+                blurType="light"
+                blurAmount={20}
+                reducedTransparencyFallbackColor="white"
+            />
+            <View style={styles.itemCardBluredViewContent}>
+                <View style={styles.leftItemCardBluredViewContent}>
+                    <CustomText
+                        numberOfLines={2}
+                        fontSize="h5"
+                        fontWeight="bold"
+                        style={styles.titleMostPopularPadding}
+                    >
+                        {title}
+                    </CustomText>
+                </View>
+            </View>
+        </ImageBackground>
+    </View>
+)
+
 const Home = () => {
     const {
         user,
         mostPopularPlaylist,
         newReleasePlaylist,
         currentUserPlaylist,
-        loading
+        fetchUserData,
+        fetchMostPopularPlaylist,
+        fetchNewReleasePlaylist,
+        fetchCurrentUserPlaylist,
+        fetchCategories
     } = useApi()
+    const { token } = useAuth()
+    const [loading, setLoading] = useState(true)
     const [greetingMessage, setGreetingMessage] = useState<string>('')
-
     //useEffect for greeting message
     useEffect(() => {
         // Get the current time
@@ -62,103 +166,29 @@ const Home = () => {
             setGreetingMessage(greetingMessages.night)
         }
     }, [])
-
-    const Item = ({ title, description, coverImage }: ItemProps) => (
-        <View style={styles.container}>
-            <ImageBackground
-                source={{ uri: coverImage }}
-                style={styles.backgroundImage}
-            >
-                <BlurView
-                    style={styles.absolute}
-                    blurType="light"
-                    blurAmount={20}
-                    reducedTransparencyFallbackColor="white"
-                />
-                <View style={styles.itemCardBluredViewContent}>
-                    <View style={styles.leftItemCardBluredViewContent}>
-                        <CustomText
-                            numberOfLines={1}
-                            fontSize="h5"
-                            fontWeight="bold"
-                            style={styles.titleMostPopularPadding}
-                        >
-                            {title}
-                        </CustomText>
-                        <CustomText
-                            numberOfLines={1}
-                            color="lightGrey"
-                            fontWeight="400"
-                            style={styles.subtitleMostPopularPadding}
-                        >
-                            {description}
-                        </CustomText>
-                    </View>
-                    <View style={styles.rightItemCardBluredViewContent}>
-                        <View style={styles.playIconView}>
-                            <HomePlayIcon />
-                        </View>
-                    </View>
-                </View>
-            </ImageBackground>
-        </View>
-    )
-
-    const ItemNewRelease = ({ title, coverImage }: ItemNewReleaseProps) => (
-        <View style={styles.container1}>
-            <ImageBackground
-                source={{ uri: coverImage }}
-                style={styles.backgroundImage}
-            >
-                <BlurView
-                    style={styles.absolute}
-                    blurType="light"
-                    blurAmount={20}
-                    reducedTransparencyFallbackColor="white"
-                />
-                <View style={styles.itemCardBluredViewContent}>
-                    <View style={styles.leftItemCardBluredViewContent}>
-                        <CustomText
-                            numberOfLines={2}
-                            fontSize="h5"
-                            fontWeight="bold"
-                            style={styles.titleMostPopularPadding}
-                        >
-                            {title}
-                        </CustomText>
-                    </View>
-                </View>
-            </ImageBackground>
-        </View>
-    )
-
-    const ItemUserPlaylist = ({ title, coverImage }: ItemUserPlaylist) => (
-        <View style={styles.container1}>
-            <ImageBackground
-                source={{ uri: coverImage }}
-                style={styles.backgroundImage}
-            >
-                <BlurView
-                    style={styles.absolute}
-                    blurType="light"
-                    blurAmount={20}
-                    reducedTransparencyFallbackColor="white"
-                />
-                <View style={styles.itemCardBluredViewContent}>
-                    <View style={styles.leftItemCardBluredViewContent}>
-                        <CustomText
-                            numberOfLines={2}
-                            fontSize="h5"
-                            fontWeight="bold"
-                            style={styles.titleMostPopularPadding}
-                        >
-                            {title}
-                        </CustomText>
-                    </View>
-                </View>
-            </ImageBackground>
-        </View>
-    )
+    //useEffect for fetching data
+    useEffect(() => {
+        if (token) {
+            const fetchData = async () => {
+                setLoading(true)
+                try {
+                    // Fetch data for all APIs
+                    await Promise.all([
+                        fetchUserData(),
+                        fetchMostPopularPlaylist(),
+                        fetchNewReleasePlaylist(),
+                        fetchCurrentUserPlaylist(),
+                        fetchCategories()
+                    ])
+                } catch (error) {
+                    console.error('Error fetching data:', error)
+                } finally {
+                    setLoading(false)
+                }
+            }
+            fetchData()
+        }
+    }, [token])
 
     return (
         <SafeAreaView style={styles.safeAreaContainer}>
