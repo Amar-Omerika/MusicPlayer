@@ -16,6 +16,7 @@ const ApiContextProvider = ({ children }: any) => {
     const [newReleasePlaylist, setNewReleasePlaylist] = useState<any>()
     const [currentUserPlaylist, setcurrentUserPlaylist] = useState<any>()
     const [categories, setCategories] = useState<any>()
+    const [playlist, setPlaylist] = useState<any>()
 
     const fetchUserData = async () => {
         try {
@@ -104,7 +105,7 @@ const ApiContextProvider = ({ children }: any) => {
                 undefined,
                 token
             ) // GET request with Bearer token
-            setCategories(result.data)
+            setPlaylist(result.data)
         } catch (error) {
             console.error('Request Error:', error)
         }
@@ -121,6 +122,8 @@ const ApiContextProvider = ({ children }: any) => {
         setcurrentUserPlaylist,
         categories,
         setCategories,
+        playlist,
+        setPlaylist,
         fetchUserData,
         fetchMostPopularPlaylist,
         fetchNewReleasePlaylist,

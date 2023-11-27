@@ -4,7 +4,6 @@ import { NavigationContainer } from '@react-navigation/native'
 import Navigator from './src/navigation'
 import { useAuth } from './src/context/AuthContext'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { useApi } from './src/context/ApiContext'
 
 const App = () => {
     const { setToken } = useAuth()

@@ -36,10 +36,7 @@ const AuthStackScreen = () => (
 
 const HomeStack = createStackNavigator()
 const HomeStackScreen = () => (
-    <HomeStack.Navigator
-        initialRouteName={'Home'}
-        screenOptions={{ ...defaultStackOptions }}
-    >
+    <HomeStack.Navigator screenOptions={{ ...defaultStackOptions }}>
         <AuthStack.Screen name="Home" component={Home} />
         <AuthStack.Screen name="PlaylistSongs" component={PlaylistSongs} />
     </HomeStack.Navigator>
