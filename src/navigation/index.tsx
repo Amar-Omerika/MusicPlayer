@@ -8,6 +8,7 @@ import Login from '../screens/Login'
 import Home from '../screens/Home'
 import SearchScreen from '../screens/Search'
 import LibraryScreen from '../screens/LibraryScreen'
+import PlaylistSongs from '../screens/PlaylistSongs'
 
 //images
 import {
@@ -33,6 +34,12 @@ const AuthStackScreen = () => (
     </AuthStack.Navigator>
 )
 
+const AuthStackNotBottomTab = createStackNavigator()
+const AuthStackNotBottomScreen = () => (
+    <AuthStackNotBottomTab.Navigator screenOptions={{ ...defaultStackOptions }}>
+        <AuthStack.Screen name="SongsList" component={PlaylistSongs} />
+    </AuthStackNotBottomTab.Navigator>
+)
 /**
  * Tab bar configuration
  */
@@ -119,6 +126,10 @@ const RootStackScreen = () => {
         <RootStack.Navigator screenOptions={{ ...defaultStackOptions }}>
             <RootStack.Screen name="App" component={TabNavigatorScreen} />
             <RootStack.Screen name="Auth" component={AuthStackScreen} />
+            <RootStack.Screen
+                name="AuthStack"
+                component={AuthStackNotBottomScreen}
+            />
         </RootStack.Navigator>
     )
 }

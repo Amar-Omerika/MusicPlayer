@@ -91,6 +91,24 @@ const ApiContextProvider = ({ children }: any) => {
             console.error('Request Error:', error)
         }
     }
+    const fetchIndividualPlaylist = async (playlistId: string) => {
+        if (!playlistId) {
+            console.error('Invalid playlistId')
+            return
+        }
+        try {
+            const result = await apiHelper<string>(
+                'get',
+                `/playlists/${playlistId}`,
+                undefined,
+                undefined,
+                token
+            ) // GET request with Bearer token
+            setCategories(result.data)
+        } catch (error) {
+            console.error('Request Error:', error)
+        }
+    }
 
     const value: any = {
         user,
@@ -107,7 +125,8 @@ const ApiContextProvider = ({ children }: any) => {
         fetchMostPopularPlaylist,
         fetchNewReleasePlaylist,
         fetchCurrentUserPlaylist,
-        fetchCategories
+        fetchCategories,
+        fetchIndividualPlaylist
     }
 
     return <ApiContext.Provider value={value}>{children}</ApiContext.Provider>
