@@ -34,18 +34,22 @@ const AuthStackScreen = () => (
     </AuthStack.Navigator>
 )
 
-const AuthStackNotBottomTab = createStackNavigator()
-const AuthStackNotBottomScreen = () => (
-    <AuthStackNotBottomTab.Navigator screenOptions={{ ...defaultStackOptions }}>
-        <AuthStack.Screen name="SongsList" component={PlaylistSongs} />
-    </AuthStackNotBottomTab.Navigator>
+const HomeStack = createStackNavigator()
+const HomeStackScreen = () => (
+    <HomeStack.Navigator
+        initialRouteName={'Home'}
+        screenOptions={{ ...defaultStackOptions }}
+    >
+        <AuthStack.Screen name="Home" component={Home} />
+        <AuthStack.Screen name="PlaylistSongs" component={PlaylistSongs} />
+    </HomeStack.Navigator>
 )
 /**
  * Tab bar configuration
  */
 const TabBarConfig = [
     {
-        screen: Home,
+        screen: HomeStackScreen,
         activeIcon: HomeActiveIcon,
         inactiveIcon: HomeInactiveIcon,
         tabBarLabel: 'Home'
@@ -126,10 +130,6 @@ const RootStackScreen = () => {
         <RootStack.Navigator screenOptions={{ ...defaultStackOptions }}>
             <RootStack.Screen name="App" component={TabNavigatorScreen} />
             <RootStack.Screen name="Auth" component={AuthStackScreen} />
-            <RootStack.Screen
-                name="AuthStack"
-                component={AuthStackNotBottomScreen}
-            />
         </RootStack.Navigator>
     )
 }

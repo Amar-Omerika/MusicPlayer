@@ -5,7 +5,8 @@ import {
     View,
     Image,
     FlatList,
-    ImageBackground
+    ImageBackground,
+    TouchableOpacity
 } from 'react-native'
 import { BlurView } from '@react-native-community/blur'
 import { ThemeColors } from '../../constants/ThemeColors'
@@ -15,11 +16,14 @@ import { useApi } from '../../context/ApiContext'
 import { ScrollView } from 'react-native-gesture-handler'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useAuth } from '../../context/AuthContext'
+import { useNavigation } from '@react-navigation/native'
 
 interface ItemProps {
+    id?: string
     title: any
     coverImage?: any
     description: string
+    onPress: any
 }
 interface ItemNewReleaseProps {
     title: any
@@ -30,46 +34,50 @@ interface ItemUserPlaylist {
     coverImage?: any
 }
 
-const Item = ({ title, description, coverImage }: ItemProps) => (
-    <View style={styles.container}>
-        <ImageBackground
-            source={{ uri: coverImage }}
-            style={styles.backgroundImage}
-        >
-            <BlurView
-                style={styles.absolute}
-                blurType="light"
-                blurAmount={20}
-                reducedTransparencyFallbackColor="white"
-            />
-            <View style={styles.itemCardBluredViewContent}>
-                <View style={styles.leftItemCardBluredViewContent}>
-                    <CustomText
-                        numberOfLines={1}
-                        fontSize="h5"
-                        fontWeight="bold"
-                        style={styles.titleMostPopularPadding}
-                    >
-                        {title}
-                    </CustomText>
-                    <CustomText
-                        numberOfLines={1}
-                        color="lightGrey"
-                        fontWeight="400"
-                        style={styles.subtitleMostPopularPadding}
-                    >
-                        {description}
-                    </CustomText>
-                </View>
-                <View style={styles.rightItemCardBluredViewContent}>
-                    <View style={styles.playIconView}>
-                        <HomePlayIcon />
+const Item = ({ title, description, coverImage, id, onPress }: ItemProps) => {
+    return (
+        <View style={styles.container}>
+            <TouchableOpacity style={{ flex: 1 }} onPress={() => onPress(id)}>
+                <ImageBackground
+                    source={{ uri: coverImage }}
+                    style={styles.backgroundImage}
+                >
+                    <BlurView
+                        style={styles.absolute}
+                        blurType="light"
+                        blurAmount={20}
+                        reducedTransparencyFallbackColor="white"
+                    />
+                    <View style={styles.itemCardBluredViewContent}>
+                        <View style={styles.leftItemCardBluredViewContent}>
+                            <CustomText
+                                numberOfLines={1}
+                                fontSize="h5"
+                                fontWeight="bold"
+                                style={styles.titleMostPopularPadding}
+                            >
+                                {title}
+                            </CustomText>
+                            <CustomText
+                                numberOfLines={1}
+                                color="lightGrey"
+                                fontWeight="400"
+                                style={styles.subtitleMostPopularPadding}
+                            >
+                                {description}
+                            </CustomText>
+                        </View>
+                        <View style={styles.rightItemCardBluredViewContent}>
+                            <View style={styles.playIconView}>
+                                <HomePlayIcon />
+                            </View>
+                        </View>
                     </View>
-                </View>
-            </View>
-        </ImageBackground>
-    </View>
-)
+                </ImageBackground>
+            </TouchableOpacity>
+        </View>
+    )
+}
 
 const ItemNewRelease = ({ title, coverImage }: ItemNewReleaseProps) => (
     <View style={styles.container1}>
@@ -142,6 +150,7 @@ const Home = () => {
     const { token } = useAuth()
     const [loading, setLoading] = useState(true)
     const [greetingMessage, setGreetingMessage] = useState<string>('')
+
     //useEffect for greeting message
     useEffect(() => {
         // Get the current time
@@ -189,7 +198,12 @@ const Home = () => {
             fetchData()
         }
     }, [token])
+    const navigation: any = useNavigation()
 
+    const handlePress = (id: string) => {
+        // Navigate to another screen and pass the id as a prop
+        navigation.navigate('PlaylistSongs', { itemId: id })
+    }
     return (
         <SafeAreaView style={styles.safeAreaContainer}>
             {!loading ? (
@@ -240,6 +254,8 @@ const Home = () => {
                                         title={item?.name}
                                         description={item?.description}
                                         coverImage={item?.images[0].url}
+                                        id={item?.id}
+                                        onPress={handlePress}
                                     />
                                 )}
                                 keyExtractor={item => item?.id}
