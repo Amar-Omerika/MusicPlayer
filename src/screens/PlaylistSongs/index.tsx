@@ -20,9 +20,6 @@ const PlaylistSongs = () => {
     const routeParams: { itemId?: string } = route?.params || {}
     const { itemId } = routeParams
 
-    useEffect(() => {
-        fetchIndividualPlaylist(itemId)
-    }, [])
     //useEffect for fetching data
     useEffect(() => {
         if (itemId) {
@@ -59,7 +56,24 @@ const PlaylistSongs = () => {
                             style={styles.backgroundImage}
                         />
                     </View>
+                    <CustomText fontSize="h4" fontWeight="700">
+                        {playlist?.name}
+                    </CustomText>
+                    <CustomText color="mediumGrey">
+                        {playlist?.description}
+                    </CustomText>
+                    <View style={{ flexDirection: 'row' }}>
+                        <CustomText color="mediumGrey" fontWeight="700">
+                            followers:{' '}
+                        </CustomText>
+                        <CustomText color="mediumGrey">
+                            {playlist?.followers.total.toLocaleString('en-US', {
+                                style: 'decimal'
+                            })}
+                        </CustomText>
+                    </View>
                 </LinearGradient>
+
                 <Wrapper>
                     <Song />
                 </Wrapper>
