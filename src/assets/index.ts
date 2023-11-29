@@ -8,6 +8,8 @@ import SearchInActiveIcon from './svg/searchInactiveIcon.svg'
 import HomePlayIcon from './svg/homePlayIcon.svg'
 import GridIcon from './svg/gridIcon.svg'
 import ListIcon from './svg/listIcon.svg'
+import BackIcon from './svg/backIcon.svg'
+
 
 
 
@@ -23,6 +25,7 @@ export {
     SearchInActiveIcon,
     HomePlayIcon,
     GridIcon,
-    ListIcon
+    ListIcon,
+    BackIcon
 };
 
