@@ -6,7 +6,11 @@ import {
     Image,
     FlatList,
     ImageBackground,
-    TouchableOpacity
+    TouchableOpacity,
+    Alert,
+    Pressable,
+    Text,
+    Modal
 } from 'react-native'
 import { BlurView } from '@react-native-community/blur'
 import { ThemeColors } from '../../constants/ThemeColors'
@@ -150,6 +154,7 @@ const Home = () => {
     const { token } = useAuth()
     const [loading, setLoading] = useState(true)
     const [greetingMessage, setGreetingMessage] = useState<string>('')
+    const [modalVisible, setModalVisible] = useState<boolean>(false)
 
     //useEffect for greeting message
     useEffect(() => {
@@ -395,5 +400,20 @@ const styles = StyleSheet.create({
         marginTop: 10,
         borderRadius: 20,
         overflow: 'hidden' // Clip the image and blur within the container
+    },
+
+    centeredView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 22
+    },
+    button: {
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2
+    },
+    buttonOpen: {
+        backgroundColor: '#F194FF'
     }
 })
