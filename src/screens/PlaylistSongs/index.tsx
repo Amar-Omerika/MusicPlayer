@@ -76,6 +76,7 @@ const PlaylistSongs = () => {
     const routeParams: { itemId?: string } = route?.params || {}
     const { itemId } = routeParams
     const navigation = useNavigation()
+
     const handlePress = (id: string) => {
         // Here we are going to set id of an track from playlist context
     }
