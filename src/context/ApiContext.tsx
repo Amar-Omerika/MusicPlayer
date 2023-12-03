@@ -17,7 +17,9 @@ const ApiContextProvider = ({ children }: any) => {
     const [currentUserPlaylist, setcurrentUserPlaylist] = useState<any>()
     const [categories, setCategories] = useState<any>()
     const [playlist, setPlaylist] = useState<any>()
+    const [currentPlayingSong, setCurrentPlayingSong] = useState<any>()
 
+    //these are general apis that i called across the app
     const fetchUserData = async () => {
         try {
             const result = await apiHelper<string>(
@@ -111,6 +113,22 @@ const ApiContextProvider = ({ children }: any) => {
         }
     }
 
+    //every api related to player
+    const fetchCurrentPlayingSong = async () => {
+        try {
+            const result = await apiHelper<string>(
+                'get',
+                `/me/player/currently-playing`,
+                undefined,
+                undefined,
+                token
+            ) // GET request with Bearer token
+            setCurrentPlayingSong(result.data)
+        } catch (error) {
+            console.error('Request Error:', error)
+        }
+    }
+
     const value: any = {
         user,
         setUser,
@@ -124,12 +142,15 @@ const ApiContextProvider = ({ children }: any) => {
         setCategories,
         playlist,
         setPlaylist,
+        currentPlayingSong,
+        setCurrentPlayingSong,
         fetchUserData,
         fetchMostPopularPlaylist,
         fetchNewReleasePlaylist,
         fetchCurrentUserPlaylist,
         fetchCategories,
-        fetchIndividualPlaylist
+        fetchIndividualPlaylist,
+        fetchCurrentPlayingSong
     }
 
     return <ApiContext.Provider value={value}>{children}</ApiContext.Provider>

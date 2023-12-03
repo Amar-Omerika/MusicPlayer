@@ -2,7 +2,7 @@ import React, { useContext, createContext, useState } from 'react'
 
 const PlayerContext = createContext(null)
 
-export const useAuth = (): any => {
+export const usePlayer = (): any => {
     return useContext(PlayerContext)
 }
 
@@ -16,7 +16,8 @@ const PlayerContextProvider = ({ children }: any) => {
         setModalVisible,
         songId,
         setSongId,
-        bottomButtonVisible
+        bottomButtonVisible,
+        setBottomButtomVisible
     }
 
     return (

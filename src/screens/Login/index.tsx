@@ -33,7 +33,9 @@ const Login = () => {
                 'user-top-read',
                 'playlist-read-private',
                 'playlist-read-collaborative',
-                'playlist-modify-public' // or "playlist-modify-private"
+                'playlist-modify-public', // or "playlist-modify-private"
+                'user-read-currently-playing',
+                'user-read-playback-state'
             ]
         }
         const result = await authorize(config)

@@ -6,19 +6,19 @@ import {
     Image,
     FlatList,
     ImageBackground,
-    TouchableOpacity,
-    Alert,
-    Pressable,
-    Text,
-    Modal
+    TouchableOpacity
 } from 'react-native'
 import { BlurView } from '@react-native-community/blur'
 import { ThemeColors } from '../../constants/ThemeColors'
-import { CustomText, Wrapper, AnimatedLoader } from '../../components'
+import {
+    CustomText,
+    Wrapper,
+    AnimatedLoader,
+    BottomButtonModal
+} from '../../components'
 import { HomePlayIcon } from '../../assets'
 import { useApi } from '../../context/ApiContext'
 import { ScrollView } from 'react-native-gesture-handler'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useAuth } from '../../context/AuthContext'
 import { useNavigation } from '@react-navigation/native'
 
@@ -149,7 +149,9 @@ const Home = () => {
         fetchMostPopularPlaylist,
         fetchNewReleasePlaylist,
         fetchCurrentUserPlaylist,
-        fetchCategories
+        fetchCategories,
+        fetchCurrentPlayingSong,
+        currentPlayingSong
     } = useApi()
     const { token } = useAuth()
     const [loading, setLoading] = useState(true)
@@ -203,6 +205,23 @@ const Home = () => {
             fetchData()
         }
     }, [token])
+
+    //fetch current song if it changes
+    useEffect(() => {
+        if (token) {
+            const fetchData = async () => {
+                setLoading(true)
+                try {
+                    fetchCurrentPlayingSong()
+                } catch (error) {
+                    console.error('Error fetching data:', error)
+                } finally {
+                    setLoading(false)
+                }
+            }
+            fetchData()
+        }
+    }, [currentPlayingSong, token])
     const navigation: any = useNavigation()
 
     const handlePress = (id: string) => {
@@ -217,7 +236,7 @@ const Home = () => {
                         flex: 1
                     }}
                 >
-                    <Wrapper>
+                    <Wrapper marginBottom={85}>
                         <View style={styles.header}>
                             <View style={styles.contentHeaderView}>
                                 {user && user.images && user.images[1] && (
@@ -313,6 +332,7 @@ const Home = () => {
             ) : (
                 <AnimatedLoader />
             )}
+            {currentPlayingSong ? <BottomButtonModal /> : null}
         </SafeAreaView>
     )
 }
