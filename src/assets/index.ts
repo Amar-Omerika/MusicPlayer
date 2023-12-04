@@ -12,6 +12,7 @@ import BackIcon from './svg/backIcon.svg'
 import PlayMusicIcon from './svg/playMusic.svg'
 import StopMusicIcon from './svg/stopMusic.svg'
 import AddToFavoritesIcon from './svg/addToFavorites.svg'
+import ArrowDownIcon from './svg/arrowDownsvg.svg'
 
 
 
@@ -33,6 +34,7 @@ export {
     BackIcon,
     PlayMusicIcon,
     StopMusicIcon,
-    AddToFavoritesIcon
+    AddToFavoritesIcon,
+    ArrowDownIcon
 };
 

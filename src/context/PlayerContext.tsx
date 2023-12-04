@@ -9,15 +9,12 @@ export const usePlayer = (): any => {
 const PlayerContextProvider = ({ children }: any) => {
     const [modalVisible, setModalVisible] = useState(false)
     const [songId, setSongId] = useState(false)
-    const [bottomButtonVisible, setBottomButtomVisible] = useState(true)
 
     const value: any = {
         modalVisible,
         setModalVisible,
         songId,
-        setSongId,
-        bottomButtonVisible,
-        setBottomButtomVisible
+        setSongId
     }
 
     return (

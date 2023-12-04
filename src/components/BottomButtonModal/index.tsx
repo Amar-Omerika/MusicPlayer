@@ -1,42 +1,56 @@
 import React, { useEffect } from 'react'
 import CustomText from '../Text/Text'
-import { Image, StyleSheet, View } from 'react-native'
+import {
+    Image,
+    StyleSheet,
+    View,
+    TouchableOpacity,
+    Pressable
+} from 'react-native'
 import { useApi } from '../../context/ApiContext'
 import { PlayMusicIcon, StopMusicIcon, AddToFavoritesIcon } from '../../assets'
+import { usePlayer } from '../../context/PlayerContext'
 
 const BottomButtonModal = () => {
     const { currentPlayingSong } = useApi()
+    const { setModalVisible } = usePlayer()
 
     return (
-        <>
-            <View style={styles.container}>
-                <Image
-                    source={{
-                        uri: currentPlayingSong?.item.album.images[0].url
-                    }}
-                    style={styles.imageStyling}
-                />
+        <Pressable
+            style={styles.container}
+            onPress={() => {
+                setModalVisible(true)
+                console.log('triger')
+            }}
+        >
+            <Image
+                source={{
+                    uri: currentPlayingSong?.item.album.images[0].url
+                }}
+                style={styles.imageStyling}
+            />
 
-                <View style={{ width: '50%', marginLeft: 5 }}>
-                    <CustomText fontWeight="bold">
-                        {currentPlayingSong?.item.name} {' \u25CF '}{' '}
-                        {currentPlayingSong?.item.album.artists[0]?.name}
-                    </CustomText>
-                </View>
-
-                <View
-                    style={{
-                        flex: 1,
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        justifyContent: 'space-evenly'
-                    }}
-                >
-                    <AddToFavoritesIcon />
-                    <PlayMusicIcon />
-                </View>
+            <View style={{ width: '50%', marginLeft: 5 }}>
+                <CustomText fontWeight="bold">
+                    {currentPlayingSong?.item.name} {' \u25CF '}{' '}
+                    {currentPlayingSong?.item.album.artists[0]?.name}
+                </CustomText>
             </View>
-        </>
+            <View
+                style={{
+                    flex: 1,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-evenly'
+                }}
+            >
+                <TouchableOpacity>
+                    <AddToFavoritesIcon />
+                </TouchableOpacity>
+
+                <PlayMusicIcon />
+            </View>
+        </Pressable>
     )
 }
 

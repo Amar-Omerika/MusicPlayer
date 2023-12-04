@@ -1,4 +1,10 @@
-import React, { useContext, createContext, useState, useEffect } from 'react'
+import React, {
+    useContext,
+    createContext,
+    useState,
+    useEffect,
+    useCallback
+} from 'react'
 import apiHelper from '../utils/apiHelper'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useAuth } from './AuthContext'
@@ -128,6 +134,20 @@ const ApiContextProvider = ({ children }: any) => {
             console.error('Request Error:', error)
         }
     }
+    // const fetchCurrentPlayingSong = useCallback(async () => {
+    //     try {
+    //         const result = await apiHelper<string>(
+    //             'get',
+    //             `/me/player/currently-playing`,
+    //             undefined,
+    //             undefined,
+    //             token
+    //         ) // GET request with Bearer token
+    //         setCurrentPlayingSong(result.data)
+    //     } catch (error) {
+    //         console.error('Request Error:', error)
+    //     }
+    // }, [setCurrentPlayingSong, currentPlayingSong?.item?.id])
 
     const value: any = {
         user,

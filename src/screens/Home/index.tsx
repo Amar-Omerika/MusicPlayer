@@ -14,7 +14,8 @@ import {
     CustomText,
     Wrapper,
     AnimatedLoader,
-    BottomButtonModal
+    BottomButtonModal,
+    SongModal
 } from '../../components'
 import { HomePlayIcon } from '../../assets'
 import { useApi } from '../../context/ApiContext'
@@ -158,6 +159,20 @@ const Home = () => {
     const [greetingMessage, setGreetingMessage] = useState<string>('')
     const [modalVisible, setModalVisible] = useState<boolean>(false)
 
+    const songId = currentPlayingSong?.item?.name
+    //fetch current song if it changes
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                await fetchCurrentPlayingSong()
+            } catch (error) {
+                console.error('Error fetching data:', error)
+                // Handle the error, show a message, etc.
+            } finally {
+            }
+        }
+        fetchData()
+    }, [songId])
     //useEffect for greeting message
     useEffect(() => {
         // Get the current time
@@ -206,22 +221,6 @@ const Home = () => {
         }
     }, [token])
 
-    //fetch current song if it changes
-    useEffect(() => {
-        if (token) {
-            const fetchData = async () => {
-                setLoading(true)
-                try {
-                    fetchCurrentPlayingSong()
-                } catch (error) {
-                    console.error('Error fetching data:', error)
-                } finally {
-                    setLoading(false)
-                }
-            }
-            fetchData()
-        }
-    }, [currentPlayingSong, token])
     const navigation: any = useNavigation()
 
     const handlePress = (id: string) => {
@@ -328,6 +327,7 @@ const Home = () => {
                             />
                         </View>
                     </Wrapper>
+                    <SongModal />
                 </ScrollView>
             ) : (
                 <AnimatedLoader />
