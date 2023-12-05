@@ -10,12 +10,19 @@ import {
 } from 'react-native'
 import Modal from 'react-native-modal'
 import { usePlayer } from '../../context/PlayerContext'
+import { useApi } from '../../context/ApiContext'
 import { ThemeColors } from '../../constants/ThemeColors'
-import { ArrowDownIcon } from '../../assets'
+import {
+    ArrowDownIcon,
+    NextSongIcon,
+    PlayMusicIcon,
+    PreviousSongIcon
+} from '../../assets'
 import CustomText from '../Text/Text'
 import Divider from '../Divider'
 
 const SongModal = () => {
+    const { currentPlayingSong, fetchCurrentPlayingSong } = useApi()
     const { setModalVisible } = usePlayer()
     var modalVisible = true
     const rotateValue = useRef(new Animated.Value(0)).current
@@ -41,6 +48,20 @@ const SongModal = () => {
         inputRange: [0, 1],
         outputRange: ['0deg', '360deg']
     })
+    const songId = currentPlayingSong?.item?.name
+    //fetch current song if it changes
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                await fetchCurrentPlayingSong()
+            } catch (error) {
+                console.error('Error fetching data:', error)
+                // Handle the error, show a message, etc.
+            } finally {
+            }
+        }
+        fetchData()
+    }, [songId])
     return (
         <View style={{ flex: 1 }}>
             <Modal
@@ -63,7 +84,7 @@ const SongModal = () => {
                                 fontSize="h5"
                                 fontWeight="700"
                             >
-                                Phonk
+                                {currentPlayingSong?.item.album.name}
                             </CustomText>
                         </View>
 
@@ -75,10 +96,40 @@ const SongModal = () => {
                             { transform: [{ rotate }] }
                         ]}
                         source={{
-                            uri: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bXVzaWN8ZW58MHx8MHx8fDA%3D'
+                            uri: currentPlayingSong?.item.album.images[0].url
                         }}
                     />
-                    {/* Add the content of your modal here */}
+                    <View style={{ marginLeft: 20, marginTop: '15%' }}>
+                        <CustomText fontWeight="bold" fontSize="h4">
+                            Song
+                        </CustomText>
+                        <CustomText
+                            fontWeight="normal"
+                            fontSize="h6"
+                            color="mediumGrey"
+                        >
+                            {currentPlayingSong?.item.name} {' \u25CF '}{' '}
+                            {currentPlayingSong?.item.album.artists[0]?.name}
+                        </CustomText>
+                    </View>
+
+                    <View
+                        style={{
+                            marginTop: '50%',
+                            flexDirection: 'row',
+                            justifyContent: 'space-evenly'
+                        }}
+                    >
+                        <View style={styles.previousAndNextButtons}>
+                            <PreviousSongIcon />
+                        </View>
+                        <View style={styles.stopAndPlayButton}>
+                            <PlayMusicIcon />
+                        </View>
+                        <View style={styles.previousAndNextButtons}>
+                            <NextSongIcon />
+                        </View>
+                    </View>
                 </View>
             </Modal>
         </View>
@@ -111,5 +162,19 @@ const styles = StyleSheet.create({
         borderWidth: 5,
         alignSelf: 'center',
         marginTop: '15%'
+    },
+    previousAndNextButtons: {
+        backgroundColor: ThemeColors.darkgrey,
+        height: 50,
+        width: 50,
+        borderRadius: 100,
+        alignSelf: 'center',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    stopAndPlayButton: {
+        backgroundColor: ThemeColors.yellow,
+        padding: 20,
+        borderRadius: 100
     }
 })

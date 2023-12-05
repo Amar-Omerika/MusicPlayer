@@ -13,6 +13,9 @@ import PlayMusicIcon from './svg/playMusic.svg'
 import StopMusicIcon from './svg/stopMusic.svg'
 import AddToFavoritesIcon from './svg/addToFavorites.svg'
 import ArrowDownIcon from './svg/arrowDownsvg.svg'
+import NextSongIcon from './svg/nextSong.svg'
+import PreviousSongIcon from './svg/previousSong.svg'
+
 
 
 
@@ -35,6 +38,8 @@ export {
     PlayMusicIcon,
     StopMusicIcon,
     AddToFavoritesIcon,
-    ArrowDownIcon
+    ArrowDownIcon,
+    NextSongIcon,
+    PreviousSongIcon
 };
 
