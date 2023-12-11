@@ -16,8 +16,7 @@ import {
     ArrowDownIcon,
     NextSongIcon,
     PlayMusicIcon,
-    PreviousSongIcon,
-    HeadPhonesImage
+    PreviousSongIcon
 } from '../../assets'
 import CustomText from '../Text/Text'
 import Divider from '../Divider'
@@ -71,7 +70,7 @@ const SongModal = () => {
                 }}
             >
                 <View style={styles.centeredView}>
-                    <HeadPhonesImage
+                    <Image
                         style={{
                             flex: 1,
                             resizeMode: 'cover',
@@ -80,6 +79,7 @@ const SongModal = () => {
                             height: '100%',
                             opacity: 0.1
                         }}
+                        source={require('../../assets/jpg/headPhonesImage.jpg')}
                     />
                     <View style={styles.headerView}>
                         <TouchableOpacity
