@@ -23,8 +23,7 @@ import Divider from '../Divider'
 
 const SongModal = () => {
     const { currentPlayingSong, fetchCurrentPlayingSong } = useApi()
-    const { setModalVisible } = usePlayer()
-    var modalVisible = true
+    const { setModalVisible, modalVisible } = usePlayer()
     const rotateValue = useRef(new Animated.Value(0)).current
 
     useEffect(() => {
@@ -72,7 +71,12 @@ const SongModal = () => {
             >
                 <View style={styles.centeredView}>
                     <View style={styles.headerView}>
-                        <TouchableOpacity style={{ margin: 5 }}>
+                        <TouchableOpacity
+                            onPress={() => {
+                                setModalVisible(false)
+                            }}
+                            style={{ margin: 5 }}
+                        >
                             <ArrowDownIcon />
                         </TouchableOpacity>
                         <View style={styles.textHeaderView}>
@@ -84,7 +88,8 @@ const SongModal = () => {
                                 fontSize="h5"
                                 fontWeight="700"
                             >
-                                {currentPlayingSong?.item.album.name}
+                                {currentPlayingSong?.item?.album?.name ||
+                                    'Unknown Album'}
                             </CustomText>
                         </View>
 
@@ -96,7 +101,9 @@ const SongModal = () => {
                             { transform: [{ rotate }] }
                         ]}
                         source={{
-                            uri: currentPlayingSong?.item.album.images[0].url
+                            uri:
+                                currentPlayingSong?.item?.album?.images[0]
+                                    ?.url || 'defaultImageUrl'
                         }}
                     />
                     <View style={{ marginLeft: 20, marginTop: '15%' }}>
@@ -108,8 +115,10 @@ const SongModal = () => {
                             fontSize="h6"
                             color="mediumGrey"
                         >
-                            {currentPlayingSong?.item.name} {' \u25CF '}{' '}
-                            {currentPlayingSong?.item.album.artists[0]?.name}
+                            {currentPlayingSong?.item?.name || 'Unknown Song'}{' '}
+                            {' \u25CF '}{' '}
+                            {currentPlayingSong?.item?.album?.artists[0]
+                                ?.name || 'Unknown Artist'}
                         </CustomText>
                     </View>
 

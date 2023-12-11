@@ -20,7 +20,6 @@ const BottomButtonModal = () => {
             style={styles.container}
             onPress={() => {
                 setModalVisible(true)
-                console.log('triger')
             }}
         >
             <Image
