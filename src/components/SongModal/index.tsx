@@ -16,7 +16,8 @@ import {
     ArrowDownIcon,
     NextSongIcon,
     PlayMusicIcon,
-    PreviousSongIcon
+    PreviousSongIcon,
+    HeadPhonesImage
 } from '../../assets'
 import CustomText from '../Text/Text'
 import Divider from '../Divider'
@@ -29,7 +30,7 @@ const SongModal = () => {
     useEffect(() => {
         const rotateAnimation = Animated.timing(rotateValue, {
             toValue: 1,
-            duration: 8000, // Adjust the duration as needed
+            duration: 5000, // Adjust the duration as needed
             easing: Easing.linear,
             useNativeDriver: true,
             isInteraction: false
@@ -70,6 +71,16 @@ const SongModal = () => {
                 }}
             >
                 <View style={styles.centeredView}>
+                    <HeadPhonesImage
+                        style={{
+                            flex: 1,
+                            resizeMode: 'cover',
+                            position: 'absolute',
+                            width: '100%',
+                            height: '100%',
+                            opacity: 0.1
+                        }}
+                    />
                     <View style={styles.headerView}>
                         <TouchableOpacity
                             onPress={() => {

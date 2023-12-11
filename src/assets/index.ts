@@ -15,6 +15,7 @@ import AddToFavoritesIcon from './svg/addToFavorites.svg'
 import ArrowDownIcon from './svg/arrowDownsvg.svg'
 import NextSongIcon from './svg/nextSong.svg'
 import PreviousSongIcon from './svg/previousSong.svg'
+import HeadPhonesImage from './jpg/headPhonesImage.jpg'
 
 
 
@@ -40,6 +41,7 @@ export {
     AddToFavoritesIcon,
     ArrowDownIcon,
     NextSongIcon,
-    PreviousSongIcon
+    PreviousSongIcon,
+    HeadPhonesImage
 };
 
