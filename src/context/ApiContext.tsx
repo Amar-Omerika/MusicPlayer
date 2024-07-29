@@ -134,20 +134,6 @@ const ApiContextProvider = ({ children }: any) => {
             console.error('Request Error:', error)
         }
     }
-    // const fetchCurrentPlayingSong = useCallback(async () => {
-    //     try {
-    //         const result = await apiHelper<string>(
-    //             'get',
-    //             `/me/player/currently-playing`,
-    //             undefined,
-    //             undefined,
-    //             token
-    //         ) // GET request with Bearer token
-    //         setCurrentPlayingSong(result.data)
-    //     } catch (error) {
-    //         console.error('Request Error:', error)
-    //     }
-    // }, [setCurrentPlayingSong, currentPlayingSong?.item?.id])
 
     const value: any = {
         user,

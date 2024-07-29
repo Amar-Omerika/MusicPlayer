@@ -51,13 +51,7 @@ const SongModal = () => {
     //fetch current song if it changes
     useEffect(() => {
         const fetchData = async () => {
-            try {
-                await fetchCurrentPlayingSong()
-            } catch (error) {
-                console.error('Error fetching data:', error)
-                // Handle the error, show a message, etc.
-            } finally {
-            }
+            await fetchCurrentPlayingSong()
         }
         fetchData()
     }, [songId])
